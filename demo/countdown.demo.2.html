@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Countdown Demo 2</title>
+        <link rel="stylesheet" href="countdown.demo.2.css" type="text/css">
+    </head>
+    <body>
+
+        <!--
+        Valid global date and time string
+        http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-time-element
+        -->
+        <div><time>2014-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
+        <div><time>2014-12-08T08:47:00-0800</time></div><!-- California -->
+        <div><time>2014-12-08T16:47:00Z</time></div><!-- UTC -->
+
+        <!--
+        Valid time string
+        http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string
+        -->
+        <div><time>12:30:39.929</time></div>
+
+        <!--
+        Valid duration string
+        http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-duration-string
+        -->
+        <div><time>PT00M10S</time></div>
+        <div><time>P2DT20H00M10S</time></div>
+
+        <!-- Python datetime.timedelta str output -->
+        <div>600 days, 3:59:12</div><!-- print datetime.timedelta(days=600, hours=3, minutes=59, seconds=12) -->
+        <div>00:59:00</div><!-- print datetime.timedelta(days=0, hours=0, minutes=59, seconds=0) -->
+
+        <!-- Human readable duration -->
+        <h1>24h00m59s</h1>
+        <h1>2h 0m</h1>
+        <h1>4h 18m 3s</h1>
+        <h1>600 days, 3:59:12</h1>
+        <h1>600 jours, 3:59:12</h1>
+        <h1>00:01</h1>
+        <h1>240:00:59</h1>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>
+        document.write('<script src="../jquery.countdown.js"><\/script>');
+        window.jQuery(function ($) {
+            "use strict";
+            $('h1, div, time').countDown({with_separator: false});
+        });
+        </script>
+
+    </body>
+</html>
