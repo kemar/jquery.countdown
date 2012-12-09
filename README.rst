@@ -9,7 +9,7 @@ Installation
 
 Include this script after jQuery.
 
-.. code-block:: html
+.. code-block::
 
     <script src='jquery.js'></script>
     <script src='jquery.countdown.js'></script>
@@ -20,7 +20,7 @@ Usage
 
 Create a countdown from a `valid global date and time <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-global-date-and-time-string>`_ string (with time-zone offset).
 
-.. code-block:: html
+.. code-block::
 
     <time>2012-12-08T17:47:00+0100</time><!-- Paris (winter) -->
     <time>2012-12-08T08:47:00-0800</time><!-- California -->
@@ -29,7 +29,7 @@ Create a countdown from a `valid global date and time <http://www.whatwg.org/spe
 
 Create a countdown from a `valid time <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string>`_ string.
 
-.. code-block:: html
+.. code-block::
 
     <time>12:30</time>
     <time>12:30:39</time>
@@ -38,7 +38,7 @@ Create a countdown from a `valid time <http://www.whatwg.org/specs/web-apps/curr
 
 Create a countdown from a `valid duration <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-duration-string>`_ string.
 
-.. code-block:: html
+.. code-block::
 
    <time>PT00M10S</time>
    <time>PT01H01M15S</time>
@@ -47,7 +47,7 @@ Create a countdown from a `valid duration <http://www.whatwg.org/specs/web-apps/
 
 Create a countdown from a string representation of a Python timedelta object.
 
-.. code-block:: html
+.. code-block::
 
     <div>600 days, 3:59:12</div>
     <div>00:59:00</div>
@@ -56,7 +56,7 @@ Create a countdown from a string representation of a Python timedelta object.
 
 Create a countdown from a JavaScript Date.parse() compliant string.
 
-.. code-block:: html
+.. code-block::
 
     <div><script>document.write(date.toDateString())</script></div>
     <div><script>document.write(date.toGMTString())</script></div>
@@ -66,7 +66,7 @@ Create a countdown from a JavaScript Date.parse() compliant string.
 
 Create a countdown from a human readable duration string.
 
-.. code-block:: html
+.. code-block::
 
     <h1>24h00m59s</h1>
     <h1>2h 0m</h1>
@@ -108,7 +108,7 @@ Generated markup
 
 A valid ``<time>`` tag representing a duration is generated.
 
-.. code-block:: html
+.. code-block::
 
     <time class="countdown" datetime="P12DT05H16M22S">
         <span class="countdown-item">
