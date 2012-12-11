@@ -11,9 +11,11 @@
                 font-size: 16px;
                 font-weight: normal;
             }
+            div, h1 {
+                margin: 30px;
+            }
             .countdown {
                 display: block;
-                margin: 20px;
             }
             .countdown-item {
                 padding: 10px;
@@ -59,13 +61,29 @@
         </h1>
 
         <!--
+        A <time> datetime attribute with a valid global date and time string, time string or duration string
+        -->
+        <h1>Datetime attribute</h1>
+        <div>
+            <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
+        </div>
+        <div>
+            <time datetime="02:30:30">Expires in 2 hours 30 minutes 30 seconds</time>
+        </div>
+        <div>
+            <time datetime="P61D">61 days</time>
+        </div>
+
+        <!--
         Valid global date and time string
         http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-time-element
         -->
 
-        <div><time>2012-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
-        <div><time>2012-12-08T08:47:00-0800</time></div><!-- California -->
-        <div><time>2012-12-08T16:47:00Z</time></div><!-- UTC -->
+        <h1>Valid global date and time string</h1>
+
+        <div><time>2013-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
+        <div><time>2013-12-08T08:47:00-0800</time></div><!-- California -->
+        <div><time>2013-12-08T16:47:00Z</time></div><!-- UTC -->
 
         <div><time>2013-11-12T14:54Z</time></div>
         <div><time>2013-11-12T14:54:39Z</time></div>
@@ -102,6 +120,7 @@
         Valid time string
         http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string
         -->
+        <h1>Valid time string</h1>
         <div><time>12:30</time></div>
         <div><time>12:30:39</time></div>
         <div><time>12:30:39.929</time></div>
@@ -110,9 +129,16 @@
         Valid duration string
         http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-duration-string
         -->
+        <h1>Valid duration string</h1>
         <div><time>PT00M10S</time></div>
         <div><time>PT01H01M15S</time></div>
-        <div><time>P2DT20H00M10S</time></div>
+        <div><time>P2DT20H20M20S</time></div>
+        <div><time>P2DT20H20M</time></div>
+        <div><time>P2DT20H</time></div>
+        <div><time>P2D</time></div>
+        <div><time>PT20H20M20S</time></div>
+        <div><time>PT20M20S</time></div>
+        <div><time>PT20S</time></div>
 
         <!--
         JavaScript Date.parse() parsable string
@@ -121,17 +147,20 @@
         new Date("December 20, 2014 10:24:00").toISOString() => 2014-12-20T09:24:00.000Z
         new Date("December 20, 2014 10:24:00").toUTCString() => Sat, 20 Dec 2014 09:24:00 GMT
         -->
+        <h1>Date.parse()</h1>
         <h1 id="toDateString"></h1>
         <h1 id="toGMTString"></h1>
         <h1 id="toISOString"></h1>
         <h1 id="toUTCString"></h1>
 
         <!-- Python datetime.timedelta str output -->
+        <h1>Timedelta</h1>
         <div>600 days, 3:59:12</div><!-- print datetime.timedelta(days=600, hours=3, minutes=59, seconds=12) -->
         <div>00:59:00</div><!-- print datetime.timedelta(days=0, hours=0, minutes=59, seconds=0) -->
         <div>3:59:12</div><!-- print datetime.timedelta(days=0, hours=3, minutes=59, seconds=12) -->
 
         <!-- Human readable duration -->
+        <h1>Human readable</h1>
         <h1>24h00m59s</h1>
         <h1>2h 0m</h1>
         <h1>4h 18m 3s</h1>

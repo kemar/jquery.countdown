@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.0
+ * jQuery Countdown - v1.1
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -18,7 +18,9 @@
      *      $(element).countDown()
      *
      *      $(element) is a valid <time> or any other HTML tag containing a text representation of a date/time
-     *      or duration remaining before a deadline expires:
+     *      or duration remaining before a deadline expires.
+     *      If $(element) is a <time> tag, the datetime attribute is checked first.
+     *          <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
      *          <time>2012-12-08T14:30:00+0100</time>
      *          <time>PT01H01M15S</time>
      *          <h1>600 days, 3:59:12</h1>
@@ -125,18 +127,26 @@
     countDown.prototype = {
 
         init: function () {
-            this.end_date = this.parseEndDate(this.element.text());
-            if (!this.end_date) {  // Unable to parse a date.
+            if (this.element.children().length) {
                 return;
             }
-            this.delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
-            this.set_timeout_delay = this.options.fast_forward ? 10 : this.delay;
+            if (this.element.attr('datetime')) {  // Try to parse the datetime attribute first.
+                this.end_date = this.parseEndDate(this.element.attr('datetime'));
+            }
+            if (this.end_date === undefined) {  // Fallback on the text content.
+                this.end_date = this.parseEndDate(this.element.text());
+            }
+            if (this.end_date === undefined) {  // Unable to parse a date.
+                return;
+            }
             if (this.element.is('time')) {
                 this.time_element = this.element;
             } else {
                 this.time_element = $('<time></time>');
                 this.element.html(this.time_element);
             }
+            this.delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
+            this.set_timeout_delay = this.options.fast_forward ? 10 : this.delay;
             this.time_element.addClass(this.options.css_class);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown(this.end_date.getTime() - new Date().getTime());

@@ -18,6 +18,15 @@ Include this script after jQuery.
 Usage
 -----
 
+Create a countdown from a ``<time>`` tag ``datetime`` attribute (valid global date and time, time or duration).
+
+.. code-block::
+
+    <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
+    <time datetime="02:30:30">Expires in 2 hours 30 minutes 30 seconds</time>
+    <time datetime="P61D">61 days</time>
+
+
 Create a countdown from a `valid global date and time <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-global-date-and-time-string>`_ string (with time-zone offset).
 
 .. code-block::
@@ -40,9 +49,10 @@ Create a countdown from a `valid duration <http://www.whatwg.org/specs/web-apps/
 
 .. code-block::
 
-   <time>PT00M10S</time>
+   <time>P2D</time>
    <time>PT01H01M15S</time>
-   <time>P2DT20H00M10S</time>
+   <time>PT20M20S</time>
+   <time>PT10S</time>
 
 
 Create a countdown from a string representation of a Python timedelta object.
