@@ -199,18 +199,18 @@
             //
             // http://goo.gl/42f8a
             // http://en.wikipedia.org/wiki/ISO_8601#Durations
-            // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S
+            // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
             //
             // RegExp:
             // /^
             //     P            => duration designator (historically called "period")
-            //     (\d+)?D?     => (days) followed by the letter "D" (optional)
-            //     T            => the letter "T" that precedes the time components of the representation
-            //     (\d+)?H?     => (hours) followed by the letter "H" (optional)
-            //     (\d+)M       => (minutes) followed by the letter "M"
-            //     (\d+)S       => (seconds) followed by the letter "S"
+            //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
+            //     T?           => the letter "T" that precedes the time components of the representation (optional)
+            //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
+            //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
+            //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
             // $/
-            var time_array = str.match(/^P(\d+)?D?T(\d+)?H?(\d+)M(\d+)S$/);
+            var time_array = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
             if (time_array) {
                 var  d = new Date();
                 var dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
