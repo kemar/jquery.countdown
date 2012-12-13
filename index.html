@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>jQuery &lt;time&gt; Countdown plugin</title>
+        <style type="text/css" media="screen">
+            body {
+                background: #0B81BC;
+                font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
+                margin: 0 0 0 40px;
+            }
+            h1, h2, a {
+                color: #FFF;
+                text-shadow: 1px 1px 2px #000;
+            }
+            .countdown {
+                font-size: 0;  /* Hack for inline and inline-block extra markup generated spaces */
+                display: block;
+                overflow: auto;
+                padding: 20px 0;
+                margin: 50px 0;
+                -webkit-transform: skew(-2deg, -2deg);
+                transform: skew(-2deg, -2deg);
+            }
+            .countdown-item {
+                display: block;
+                float: left;
+                position: relative;
+                font-size: 50px;
+                font-weight: bold;
+                padding: 36px 20px 10px 20px;
+                margin: 0 10px;
+                min-width: 100px;
+                max-width: 100px;
+                text-align: center;
+                background: #FFF;
+                border: 2px solid #FFF;
+                box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+            }
+            .countdown-dd,
+            .countdown-hh,
+            .countdown-mm,
+            .countdown-ss {
+                font: italic;
+                text-shadow: 1px 1px 10px #FFF, 1px 1px 3px #333;
+            }
+            .countdown-label {
+                font-weight: normal;
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 14px;
+                width: 120px;
+                padding: 5px 10px;
+                background: #0B81BC;
+                color: #FFF;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div>
+            <h1>Time before the end of the world:</h1>
+            <time datetime="2012-12-21T11:11:11+00:00">December 21, 2012 at 11:11 UTC</time>
+        </div>
+
+        <div>
+            <h2><a href="https://github.com/kemar/jquery.countdown">Fork the end of the world!</a></h2>
+        </div>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script>
+        window.jQuery(function ($) {
+            "use strict";
+            $('time').countDown({
+                with_separator: false,
+                onTimeElapsed:  function () {
+                    $('h1').text('Time elapsed. You forked it! You did the right thing.')
+                }
+            });
+        });
+        (function($,window,document,undefined){"use strict";var pluginName='countDown';var defaults={css_class:'countdown',with_empty_day:false,with_labels:true,with_seconds:true,with_separators:true,fast_forward:false,label_dd:'days',label_hh:'hours',label_mm:'minutes',label_ss:'seconds',separator:':',separator_days:',',onTimeElapsed:function(){}};function countDown(element,options){this.element=$(element);this.options=$.extend({},defaults,options);this._defaults=defaults;this._name=pluginName;this.init();}
+countDown.prototype={init:function(){if(this.element.children().length){return;}
+if(this.element.attr('datetime')){this.end_date=this.parseEndDate(this.element.attr('datetime'));}
+if(this.end_date===undefined){this.end_date=this.parseEndDate(this.element.text());}
+if(this.end_date===undefined){return;}
+if(this.element.is('time')){this.time_element=this.element;}else{this.time_element=$('<time></time>');this.element.html(this.time_element);}
+this.delay=this.options.with_seconds?this.sToMs(1):this.mToMs(1);this.set_timeout_delay=this.options.fast_forward?10:this.delay;this.time_element.addClass(this.options.css_class);this.time_element.bind('time.elapsed',this.options.onTimeElapsed);this.doCountDown(this.end_date.getTime()-new Date().getTime());},sToMs:function(s){return parseInt(s,10)*1000;},mToMs:function(m){return parseInt(m,10)*60*1000;},hToMs:function(h){return parseInt(h,10)*60*60*1000;},dToMs:function(d){return parseInt(d,10)*24*60*60*1000;},msToS:function(ms){return parseInt((ms/1000)%60,10);},msToM:function(ms){return parseInt((ms/1000/60)%60,10);},msToH:function(ms){return parseInt((ms/1000/60/60)%24,10);},msToD:function(ms){return parseInt((ms/1000/60/60/24),10);},parseEndDate:function(str){var d=Date.parse(str);if(!isNaN(d)){return new Date(d);}
+var time_array=str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);if(time_array){var d=new Date();var dd=time_array[1]?this.dToMs(time_array[1]):0;var hh=time_array[2]?this.hToMs(time_array[2]):0;var mm=time_array[3]?this.mToMs(time_array[3]):0;var ss=time_array[4]?this.sToMs(time_array[4]):0;d.setTime(d.getTime()+dd+hh+mm+ss);return d;}
+var time_array=str.match(/^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d{1,3})?([Z\+\-\:\d]+)?$/);if(time_array){var offset=time_array[7].match(/^([\+\-])?(\d{2}):?(\d{2})$/);var ms_offset=0;if(offset){ms_offset=this.hToMs(offset[2])+this.mToMs(offset[3]);ms_offset=(offset[1]==='+')?-ms_offset:ms_offset;}
+var now=new Date();var hh=time_array[4]?this.hToMs(time_array[4]):0;var mm=time_array[5]?this.mToMs(time_array[5]):0;var ss=time_array[6]?this.sToMs(time_array[6]):0;now.setTime(hh+mm+ss);now.setDate(time_array[3]);now.setMonth(time_array[2]-1);now.setFullYear(time_array[1]);now.setTime(now.getTime()+ms_offset);return now;}
+var time_array=str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);if(time_array){var d=new Date();var dd=time_array[1]?this.dToMs(time_array[1]):0;var hh=time_array[2]?this.hToMs(time_array[2]):0;var mm=time_array[3]?this.mToMs(time_array[3]):0;var ss=time_array[4]?this.sToMs(time_array[4]):0;d.setTime(d.getTime()+dd+hh+mm+ss);return d;}},doCountDown:function(ms){var ss=this.msToS(ms);var mm=this.msToM(ms);var hh=this.msToH(ms);var dd=this.msToD(ms);if(ms<=0){ss=mm=hh=dd=0;}
+this.displayRemainingTime({'ss':ss<10?'0'+ss.toString():ss.toString(),'mm':mm<10?'0'+mm.toString():mm.toString(),'hh':hh<10?'0'+hh.toString():hh.toString(),'dd':dd.toString()});if(ms>0){var self=this;setTimeout(function(){self.doCountDown(ms-self.delay)},self.set_timeout_delay);}else{this.time_element.trigger('time.elapsed');}},displayRemainingTime:function(remaining){var attr=[];attr.push('P');if(remaining.dd!=='0'){attr.push(remaining.dd,'D');}
+attr.push('T');attr.push(remaining.hh,'H');attr.push(remaining.mm,'M');if(this.options.with_seconds){attr.push(remaining.ss,'S');}
+var html=[];var label_dd='';var label_hh='';var label_mm='';var label_ss='';var separator='';var separator_days='';if(this.options.with_separators){separator_days=['<span class="',this.options.css_class,'-separator-dd">',this.options.separator_days,'</span>'].join('');separator=['<span class="',this.options.css_class,'-separator-dd">',this.options.separator,'</span>'].join('');}
+if(this.options.with_labels){label_dd='<span class="'+this.options.css_class+'-label">'+this.options.label_dd+'</span>';label_hh='<span class="'+this.options.css_class+'-label">'+this.options.label_hh+'</span>';label_mm='<span class="'+this.options.css_class+'-label">'+this.options.label_mm+'</span>';label_ss='<span class="'+this.options.css_class+'-label">'+this.options.label_ss+'</span>';}
+if(remaining.dd!=='0'||this.options.with_empty_day){html.push('<span class="',this.options.css_class,'-item">','<span class="',this.options.css_class,'-dd">',remaining.dd,'</span>',label_dd,'</span>',separator_days);}
+html.push('<span class="',this.options.css_class,'-item">','<span class="',this.options.css_class,'-hh">',remaining.hh[0],'</span>','<span class="',this.options.css_class,'-hh">',remaining.hh[1],'</span>',label_hh,'</span>',separator,'<span class="',this.options.css_class,'-item">','<span class="',this.options.css_class,'-mm">',remaining.mm[0],'</span>','<span class="',this.options.css_class,'-mm">',remaining.mm[1],'</span>',label_mm,'</span>');if(this.options.with_seconds){html.push(separator,'<span class="',this.options.css_class,'-item">','<span class="',this.options.css_class,'-ss">',remaining.ss[0],'</span>','<span class="',this.options.css_class,'-ss">',remaining.ss[1],'</span>',label_ss,'</span>');}
+this.time_element.attr('datetime',attr.join(''));this.time_element.html(html.join(''));}};$.fn[pluginName]=function(options){if(options===undefined||typeof options==='object'){return this.each(function(){if(!$.data(this,'plugin_'+pluginName)){$.data(this,'plugin_'+pluginName,new countDown(this,options));}});}};})(window.jQuery,window,document);
+        </script>
+    </body>
+</html>
