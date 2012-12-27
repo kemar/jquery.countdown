@@ -1,7 +1,7 @@
 `jQuery Countdown <http://github.com/kemar/jquery.countdown>`_
 ==============================================================
 
-Unobtrusive and easily skinable `countdown jQuery plugin<http://kemar.github.com/jquery.countdown/>`_. generating a <time> tag.
+Unobtrusive and easily skinable `countdown jQuery plugin <http://kemar.github.com/jquery.countdown/>`_ generating a <time> tag.
 
 
 Installation
