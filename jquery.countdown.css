@@ -2,6 +2,9 @@ body {
     background: #0B81BC;
     font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
 }
+h1, h2, a {
+    color: #FFF;
+}
 .countdown {
     font-size: 0;  /* Hack for inline and inline-block extra markup generated spaces */
     display: block;
