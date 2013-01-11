@@ -116,7 +116,7 @@
         , onTimeElapsed:    function () {}
     };
 
-    function countDown(element, options) {
+    function CountDown(element, options) {
         this.element = $(element);
         this.options = $.extend({}, defaults, options);
         this._defaults = defaults;
@@ -124,7 +124,7 @@
         this.init();
     }
 
-    countDown.prototype = {
+    CountDown.prototype = {
 
         init: function () {
             if (this.element.children().length) {
@@ -194,12 +194,14 @@
 
         , parseEndDate: function (str) {
 
+            var d, dd, hh, mm, ss, time_array;
+
             // Try to parse a date/time string.
             // new Date(d).toDateString() => Sat Dec 20 2014
             // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
             // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
             // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
-            var d = Date.parse(str);
+            d = Date.parse(str);
             if (!isNaN(d)) {
                 return new Date(d);
             }
@@ -220,13 +222,13 @@
             //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
             //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
             // $/
-            var time_array = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            time_array = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
             if (time_array) {
-                var  d = new Date();
-                var dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                var hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                var mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                var ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
+                 d = new Date();
+                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
+                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
+                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
+                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
                 d.setTime(d.getTime() + dd + hh + mm + ss);
                 return d;
             }
@@ -258,7 +260,7 @@
             //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
             //     ([Z\+\-\:\d]+)?  => (time-zone) offset string http://goo.gl/CJHLr
             // $
-            var time_array = str.match(
+            time_array = str.match(
                 /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d{1,3})?([Z\+\-\:\d]+)?$/);
             if (time_array) {
                 // Convert UTC offset from string to milliseconds.
@@ -272,9 +274,9 @@
                     ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
                 }
                 var now = new Date();
-                var hh  = time_array[4] ? this.hToMs(time_array[4]) : 0;
-                var mm  = time_array[5] ? this.mToMs(time_array[5]) : 0;
-                var ss  = time_array[6] ? this.sToMs(time_array[6]) : 0;
+                hh = time_array[4] ? this.hToMs(time_array[4]) : 0;
+                mm = time_array[5] ? this.mToMs(time_array[5]) : 0;
+                ss = time_array[6] ? this.sToMs(time_array[6]) : 0;
                 now.setTime(hh + mm + ss);
                 now.setDate(time_array[3]);
                 now.setMonth(time_array[2] - 1);
@@ -305,13 +307,13 @@
             //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
             //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
             // $/
-            var time_array = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
+            time_array = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
             if (time_array) {
-                var  d = new Date();
-                var dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                var hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                var mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                var ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
+                d = new Date();
+                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
+                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
+                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
+                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
                 d.setTime(d.getTime() + dd + hh + mm + ss);
                 return d;
             }
@@ -438,7 +440,7 @@
         if (options === undefined || typeof options === 'object') {
             return this.each(function () {
                 if (!$.data(this, 'plugin_' + pluginName)) {
-                    $.data(this, 'plugin_' + pluginName, new countDown(this, options));
+                    $.data(this, 'plugin_' + pluginName, new CountDown(this, options));
                 }
             });
         }
