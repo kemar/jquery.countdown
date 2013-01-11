@@ -2,7 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>jQuery &lt;time&gt; Countdown plugin</title>
+        <link href="http://fonts.googleapis.com/css?family=Righteous" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="jquery.countdown.css" type="text/css">
     </head>
     <body>
@@ -10,15 +12,48 @@
         <h1><a href="https://github.com/kemar/jquery.countdown">jquery.countdown</a></h1>
         <h2>Unobtrusive and easily skinable countdown jQuery plugin generating a &lt;time&gt; tag.</h2>
 
+        <br>
+
+        <h2>December 20, 2014 at 17:47 UTC+1 - Paris (winter)</h2>
         <div>
             <time datetime="2014-12-20T17:47:00+0100">December 20, 2014 at 17:47 UTC+1</time><!-- Paris (winter) -->
         </div>
+
+        <h2>December 20, 2014 at 08:47 UTC-8 - California</h2>
         <div>
             <time datetime="2014-12-20T08:47:00-0800">December 20, 2014 at 08:47 UTC-8</time><!-- California -->
         </div>
+
+        <h2>December 20, 2014 at 16:47 UTC</h2>
         <div>
             <time datetime="2014-12-20T16:47:00Z">December 20, 2014 at 16:47 UTC</time><!-- UTC -->
         </div>
+
+        <h2>Friday, December 13th, 2013 5:43pm</h2>
+        <div>
+            <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
+        </div>
+
+        <h2>&lt;time&gt;12:30:39.929&lt;/time&gt;</h2>
+        <div><time>12:30:39.929</time></div>
+
+        <h2>&lt;time&gt;PT00M10S&lt;/time&gt;</h2>
+        <div><time>PT00M10S</time></div>
+
+        <h2>&lt;time&gt;P2DT20H00M10S&lt;/time&gt;</h2>
+        <div><time>P2DT20H00M10S</time></div>
+
+        <h2>600 days, 3:59:12</h2>
+        <div>600 days, 3:59:12</div>
+
+        <h2>2h 0m</h2>
+        <h1>2h 0m</h1>
+
+        <h2>600 days, 3:59:12</h2>
+        <h1>600 days, 3:59:12</h1>
+
+        <h2>00:01</h2>
+        <h1>00:01</h1>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="jquery.countdown.js"></script>
@@ -26,11 +61,8 @@
         <script>
         window.jQuery(function ($) {
             "use strict";
-            $('time').countDown({
-                with_separator: false,
-                onTimeElapsed:  function () {
-                    $('h1').text('Time elapsed.')
-                }
+            $('div, h1, time').countDown({
+                with_separator: false
             });
         });
         </script>
