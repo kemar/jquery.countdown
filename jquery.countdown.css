@@ -9,6 +9,7 @@ a {
 .countdown {
     display: block;
     margin: 10px 0 100px 0;
+    white-space: nowrap;
 }
 .countdown-item {
     position: relative;
