@@ -15,39 +15,29 @@
 
             <br>
 
-            <h2>December 20, 2014 at 17:47 UTC+1 - Paris (winter)</h2>
-            <div>
-                <time datetime="2014-12-20T17:47:00+0100">December 20, 2014 at 17:47 UTC+1</time><!-- Paris (winter) -->
-            </div>
+            <h2>00:01</h2>
+            <h1 class="count-down">00:01</h1>
 
-            <h2>December 20, 2014 at 08:47 UTC-8 - California</h2>
-            <div>
-                <time datetime="2014-12-20T08:47:00-0800">December 20, 2014 at 08:47 UTC-8</time><!-- California -->
-            </div>
+            <h2>2014-12-20T17:47:00+0100<br><small>December 20, 2014 at 17:47 UTC+1 - Paris (winter)</small></h2>
+            <time class="count-down" datetime="2014-12-20T17:47:00+0100">December 20, 2014 at 17:47 UTC+1</time>
 
-            <h2>December 20, 2014 at 16:47 UTC</h2>
-            <div>
-                <time datetime="2014-12-20T16:47:00Z">December 20, 2014 at 16:47 UTC</time><!-- UTC -->
-            </div>
+            <h2>2014-12-20T08:47:00-0800<br><small>December 20, 2014 at 08:47 UTC-8 - California</small></h2>
+            <time class="count-down" datetime="2014-12-20T08:47:00-0800">December 20, 2014 at 08:47 UTC-8</time>
 
-            <h2>Friday, December 13th, 2013 5:43pm (without time zone)</h2>
-            <div>
-                <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
-            </div>
+            <h2>2014-12-20T16:47:00Z<br><small>December 20, 2014 at 16:47 UTC</small></h2>
+            <time class="count-down" datetime="2014-12-20T16:47:00Z">December 20, 2014 at 16:47 UTC</time>
 
-            <h2>&lt;time&gt;12:30:39.929&lt;/time&gt;</h2>
-            <div><time>12:30:39.929</time></div>
+            <h2>2013-12-13T17:43:00<br><small>Friday, December 13th, 2013 5:43pm (without time zone)</small></h2>
+            <time class="count-down" datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
 
-            <h2>&lt;time&gt;P2DT20H00M10S&lt;/time&gt;</h2>
-            <div><time>P2DT20H00M10S</time></div>
-            <h2>2h 0m</h2>
-            <h1>2h 0m</h1>
+            <h2>12:30:39.929</h2>
+            <time class="count-down">12:30:39.929</time>
+
+            <h2>P2DT20H00M10S</h2>
+            <time class="count-down" datetime="P2DT20H00M10S">2 days, 20:00:10</time>
 
             <h2>600 days, 3:59:12</h2>
-            <h1>600 days, 3:59:12</h1>
-
-            <h2>00:01</h2>
-            <h1>00:01</h1>
+            <h1 class="count-down">600 days, 3:59:12</h1>
 
         </article>
 
@@ -57,7 +47,7 @@
         <script>
         window.jQuery(function ($) {
             "use strict";
-            $('div, h1, time').countDown({
+            $('.count-down').countDown({
                 with_separator: false
             });
         });
