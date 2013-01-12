@@ -6,6 +6,10 @@ body {
 a {
     color: #fff;
 }
+div#content {
+    width: 80%;
+    margin: 0 auto;
+}
 .countdown {
     display: block;
     margin: 10px 0 100px 0;
