@@ -1,12 +1,12 @@
 body {
-    background: #000;
+    background: #333;
     color: #fff;
     font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
 }
 a {
     color: #fff;
 }
-div#content {
+article#content {
     width: 80%;
     margin: 0 auto;
 }
