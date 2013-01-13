@@ -1,55 +1,70 @@
 body {
-    background: #333;
-    color: #fff;
+    background: #111;
+    color: #B7B7B7;
     font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
-}
-a {
-    color: #fff;
 }
 article#content {
     width: 90%;
-    margin: 0 auto;
+    margin: 0 auto 100px auto;
 }
+a { color: #B7B7B7; }
+h2 {
+    margin-top: 80px;
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 10px;
+}
+
+code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
+.tag { color: #E11144; }
+.attr { color: #009999; }
+
 .countdown {
-    display: block;
-    margin: 10px 0 100px 0;
-    white-space: nowrap;
+    display: table-cell;
     font-weight: normal;
 }
 .countdown-item {
-    position: relative;
-    color: #000;
-}
-.countdown-dd,
-.countdown-hh,
-.countdown-mm,
-.countdown-ss {
-    font-family: 'Righteous', cursive;
-    background: #F6F6F6;
-    color: #000;
-    border-radius: 10px;
     display: inline-block;
-    font-size: 60px;
-    margin: 1px 2px;
-    min-width: 40px;
-    padding: 5px 16px;
-    text-align: center;
-}
-.countdown-label {
-    font-style: italic;
-    text-transform: capitalize;
-    background: #F6F6F6;
-    border-radius: 5px;
-    font-size: 12px;
-    margin: 1px 2px;
-    padding: 2px 5px;
-    position: absolute;
-    left: 0;
-    bottom: -44px;
-}
-.countdown-separator-dd,
-.countdown-separator {
-    color: #FFF;
-    font-size: 40px;
+    vertical-align: bottom;
     position: relative;
+    font-family: 'Open Sans', cursive;
+    font-weight: 700;
+    font-size: 160px;
+    line-height: 180px;
+    text-align: center;
+    color: #B7B7B7;
+    border-radius: 10px;
+    margin: 0 10px 0 0;
+    padding: 0 10px;
+    background: #2A2A2A;
+    background: -webkit-linear-gradient(#2A2A2A, #000);
+    background: linear-gradient(#2A2A2A, #000);
+    overflow: hidden;
+}
+.countdown-item-ss {
+    font-size: 50px;
+    line-height: 70px;
+}
+.countdown-item:after {
+    content: '';
+    display: block;
+    height: 1px;
+    border-top: 3px solid #000;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+}
+.countdown-item-dd:before {
+    content: 'DAYS';
+    display: block;
+    position: absolute;
+    font-family: 'Open Sans', cursive;
+    font-weight: 600;
+    line-height: normal;
+    right: 0;
+    bottom: 0;
+    font-size: 15px;
+    color: #B9B9B9;
 }

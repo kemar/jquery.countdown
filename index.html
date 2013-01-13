@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>jQuery &lt;time&gt; Countdown plugin</title>
-        <link href="http://fonts.googleapis.com/css?family=Righteous" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:600,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="jquery.countdown.css" type="text/css">
     </head>
     <body>
@@ -11,33 +11,31 @@
         <article id="content">
 
             <h1><a href="https://github.com/kemar/jquery.countdown">jquery.countdown</a></h1>
-            <h2>Unobtrusive and easily skinable countdown jQuery plugin generating a &lt;time&gt; tag.</h2>
+            <p>Unobtrusive and easily skinable countdown jQuery plugin generating a &lt;time&gt; tag.</p>
 
-            <br>
+            <h2><code><span class="tag">&lt;h1&gt;</span>00:10<span class="tag">&lt;/h1&gt;</span></code></h2>
+            <h1>00:10</h1>
 
-            <h2>00:01</h2>
-            <h1 class="count-down">00:01</h1>
+            <h2><code><span class="tag">&lt;time <span class="attr">datetime=&quot;2014-12-20T17:47:00+0100&quot;</span>&gt;</span>December 20, 2014 at 17:47 UTC+1 (Paris Winter)<span class="tag">&lt;/time&gt;</span></code></h2>
+            <time datetime="2014-12-20T17:47:00+0100">December 20, 2014 at 17:47 UTC+1 (Paris Winter)</time>
 
-            <h2>2014-12-20T17:47:00+0100<br><small>December 20, 2014 at 17:47 UTC+1 - Paris (winter)</small></h2>
-            <time class="count-down" datetime="2014-12-20T17:47:00+0100">December 20, 2014 at 17:47 UTC+1</time>
+            <h2><code><span class="tag">&lt;time <span class="attr">datetime=&quot;2014-12-20T08:47:00-0800&quot;</span>&gt;</span>December 20, 2014 at 08:47 UTC-8 (California)<span class="tag">&lt;/time&gt;</span></code></h2>
+            <time datetime="2014-12-20T08:47:00-0800">December 20, 2014 at 08:47 UTC-8 (California)</time>
 
-            <h2>2014-12-20T08:47:00-0800<br><small>December 20, 2014 at 08:47 UTC-8 - California</small></h2>
-            <time class="count-down" datetime="2014-12-20T08:47:00-0800">December 20, 2014 at 08:47 UTC-8</time>
+            <h2><code><span class="tag">&lt;time <span class="attr">datetime=&quot;2014-12-20T16:47:00Z&quot;</span>&gt;</span>December 20, 2014 at 16:47 UTC<span class="tag">&lt;/time&gt;</span></code></h2>
+            <time datetime="2014-12-20T16:47:00Z">December 20, 2014 at 16:47 UTC</time>
 
-            <h2>2014-12-20T16:47:00Z<br><small>December 20, 2014 at 16:47 UTC</small></h2>
-            <time class="count-down" datetime="2014-12-20T16:47:00Z">December 20, 2014 at 16:47 UTC</time>
+            <h2><code><span class="tag">&lt;time <span class="attr">datetime=&quot;2013-12-13T17:43:00&quot;</span>&gt;</span>Friday, December 13th, 2013 5:43pm<span class="tag">&lt;/time&gt;</span></code></h2>
+            <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
 
-            <h2>2013-12-13T17:43:00<br><small>Friday, December 13th, 2013 5:43pm (without time zone)</small></h2>
-            <time class="count-down" datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
+            <h2><code><span class="tag">&lt;time <span class="attr">datetime=&quot;P2DT20H00M10S&quot;</span>&gt;</span>2 days, 20:00:10<span class="tag">&lt;/time&gt;</span></code></h2>
+            <time datetime="P2DT20H00M10S">2 days, 20:00:10</time>
 
-            <h2>12:30:39.929</h2>
-            <time class="count-down">12:30:39.929</time>
+            <h2><code><span class="tag">&lt;h1&gt;</span>12:30:39.929<span class="tag">&lt;/h1&gt;</span></code></h2>
+            <h1>12:30:39.929</h1>
 
-            <h2>P2DT20H00M10S</h2>
-            <time class="count-down" datetime="P2DT20H00M10S">2 days, 20:00:10</time>
-
-            <h2>600 days, 3:59:12</h2>
-            <h1 class="count-down">600 days, 3:59:12</h1>
+            <h2><code><span class="tag">&lt;h1&gt;</span>600 days, 3:59:12<span class="tag">&lt;/h1&gt;</span></code></h2>
+            <h1>600 days, 3:59:12</h1>
 
         </article>
 
@@ -47,8 +45,9 @@
         <script>
         window.jQuery(function ($) {
             "use strict";
-            $('.count-down').countDown({
-                with_separator: false
+            $('h1, time').countDown({
+                with_separators: false,
+                with_labels: false
             });
         });
         </script>
