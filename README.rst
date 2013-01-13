@@ -31,28 +31,28 @@ Create a countdown from a `valid global date and time <http://www.whatwg.org/spe
 
 .. code-block::
 
-    <time>2012-12-08T17:47:00+0100</time><!-- Paris (winter) -->
-    <time>2012-12-08T08:47:00-0800</time><!-- California -->
-    <time>2012-12-08T16:47:00Z</time><!-- UTC -->
+    <div>2012-12-08T17:47:00+0100</div><!-- Paris (winter) -->
+    <div>2012-12-08T08:47:00-0800</div><!-- California -->
+    <div>2012-12-08T16:47:00Z</div><!-- UTC -->
 
 
 Create a countdown from a `valid time <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string>`_ string.
 
 .. code-block::
 
-    <time>12:30</time>
-    <time>12:30:39</time>
-    <time>12:30:39.929</time>
+    <div>12:30</div>
+    <div>12:30:39</div>
+    <div>12:30:39.929</div>
 
 
 Create a countdown from a `valid duration <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-duration-string>`_ string.
 
 .. code-block::
 
-   <time>P2D</time>
-   <time>PT01H01M15S</time>
-   <time>PT20M20S</time>
-   <time>PT10S</time>
+   <div>P2D</div>
+   <div>PT01H01M15S</div>
+   <div>PT20M20S</div>
+   <div>PT10S</div>
 
 
 Create a countdown from a string representation of a Python timedelta object.
