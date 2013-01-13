@@ -121,24 +121,24 @@ A valid ``<time>`` tag representing a duration is generated.
 .. code-block::
 
     <time class="countdown" datetime="P12DT05H16M22S">
-        <span class="countdown-item">
+        <span class="countdown-item countdown-item-dd">
             <span class="countdown-dd">12</span>
             <span class="countdown-label">days</span>
         </span>
         <span class="countdown-separator">:</span>
-        <span class="countdown-item">
+        <span class="countdown-item countdown-item-hh">
             <span class="countdown-hh">0</span>
             <span class="countdown-hh">5</span>
             <span class="countdown-label">hours</span>
         </span>
         <span class="countdown-separator">:</span>
-        <span class="countdown-item">
+        <span class="countdown-item countdown-item-mm">
             <span class="countdown-mm">1</span>
             <span class="countdown-mm">6</span>
             <span class="countdown-label">minutes</span>
         </span>
         <span class="countdown-separator">:</span>
-        <span class="countdown-item">
+        <span class="countdown-item countdown-item-ss">
             <span class="countdown-ss">2</span>
             <span class="countdown-ss">2</span>
             <span class="countdown-label">seconds</span>

@@ -74,24 +74,24 @@
      *
      * Example of generated HTML markup:
      *      <time class="countdown" datetime="P12DT05H16M22S">
-     *          <span class="countdown-item">
+     *          <span class="countdown-item countdown-item-dd">
      *              <span class="countdown-dd">12</span>
      *              <span class="countdown-label">days</span>
      *          </span>
      *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item">
+     *          <span class="countdown-item countdown-item-hh">
      *              <span class="countdown-hh">0</span>
      *              <span class="countdown-hh">5</span>
      *              <span class="countdown-label">hours</span>
      *          </span>
      *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item">
+     *          <span class="countdown-item countdown-item-mm">
      *              <span class="countdown-mm">1</span>
      *              <span class="countdown-mm">6</span>
      *              <span class="countdown-label">minutes</span>
      *          </span>
      *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item">
+     *          <span class="countdown-item countdown-item-ss">
      *              <span class="countdown-ss">2</span>
      *              <span class="countdown-ss">2</span>
      *              <span class="countdown-label">seconds</span>
@@ -395,7 +395,7 @@
             // Days.
             if (remaining.dd !== '0' || this.options.with_empty_day) {
                 html.push(
-                    '<span class="', this.options.css_class, '-item">',
+                    '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-dd">',
                         '<span class="', this.options.css_class, '-dd">', remaining.dd, '</span>',
                         label_dd,
                     '</span>',
@@ -404,14 +404,14 @@
             }
             html.push(
                 // Hours.
-                '<span class="', this.options.css_class, '-item">',
+                '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-hh">',
                     '<span class="', this.options.css_class, '-hh">', remaining.hh[0], '</span>',
                     '<span class="', this.options.css_class, '-hh">', remaining.hh[1], '</span>',
                     label_hh,
                 '</span>',
                 // Minutes.
                 separator,
-                '<span class="', this.options.css_class, '-item">',
+                '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-mm">',
                     '<span class="', this.options.css_class, '-mm">', remaining.mm[0], '</span>',
                     '<span class="', this.options.css_class, '-mm">', remaining.mm[1], '</span>',
                     label_mm,
@@ -421,7 +421,7 @@
             if (this.options.with_seconds) {
                 html.push(
                     separator,
-                    '<span class="', this.options.css_class, '-item">',
+                    '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-ss">',
                         '<span class="', this.options.css_class, '-ss">', remaining.ss[0], '</span>',
                         '<span class="', this.options.css_class, '-ss">', remaining.ss[1], '</span>',
                         label_ss,
