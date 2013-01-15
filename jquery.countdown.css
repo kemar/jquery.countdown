@@ -50,21 +50,26 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
     content: '';
     display: block;
     height: 1px;
-    border-top: 3px solid #000;
+    border-top: 3px solid #111;
     width: 100%;
     position: absolute;
     top: 50%;
     left: 0;
 }
-.countdown-item-dd:before {
-    content: 'DAYS';
+.countdown-label {
+    text-transform: uppercase;
     display: block;
     position: absolute;
     font-family: 'Open Sans', cursive;
-    font-weight: 600;
+    font-weight: 700;
     line-height: normal;
-    right: 0;
-    bottom: 0;
-    font-size: 15px;
+    right: 6px;
+    bottom: 4px;
+    font-size: 14px;
     color: #B9B9B9;
+}
+.countdown-item-hh .countdown-label,
+.countdown-item-mm .countdown-label,
+.countdown-item-ss .countdown-label {
+    display: none;
 }
