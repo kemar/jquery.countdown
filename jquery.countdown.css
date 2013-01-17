@@ -24,7 +24,7 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
     display: table-cell;
     font-weight: normal;
 }
-.countdown-item {
+.countdown .item {
     display: inline-block;
     vertical-align: bottom;
     position: relative;
@@ -42,11 +42,11 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
     background: linear-gradient(#2A2A2A, #000);
     overflow: hidden;
 }
-.countdown-item-ss {
+.countdown .item-ss {
     font-size: 50px;
     line-height: 70px;
 }
-.countdown-item:after {
+.countdown .item:after {
     content: '';
     display: block;
     height: 1px;
@@ -56,7 +56,7 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
     top: 50%;
     left: 0;
 }
-.countdown-label {
+.countdown .label {
     text-transform: uppercase;
     display: block;
     position: absolute;
@@ -68,8 +68,8 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
     font-size: 14px;
     color: #B9B9B9;
 }
-.countdown-item-hh .countdown-label,
-.countdown-item-mm .countdown-label,
-.countdown-item-ss .countdown-label {
+.countdown .item-hh .label,
+.countdown .item-mm .label,
+.countdown .item-ss .label {
     display: none;
 }

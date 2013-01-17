@@ -74,27 +74,27 @@
      *
      * Example of generated HTML markup:
      *      <time class="countdown" datetime="P12DT05H16M22S">
-     *          <span class="countdown-item countdown-item-dd">
-     *              <span class="countdown-dd">12</span>
-     *              <span class="countdown-label">days</span>
+     *          <span class="item item-dd">
+     *              <span class="dd"></span>
+     *              <span class="label label-dd">days</span>
      *          </span>
-     *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item countdown-item-hh">
-     *              <span class="countdown-hh">0</span>
-     *              <span class="countdown-hh">5</span>
-     *              <span class="countdown-label">hours</span>
+     *          <span class="separator separator-dd">,</span>
+     *          <span class="item item-hh">
+     *              <span class="hh-1"></span>
+     *              <span class="hh-2"></span>
+     *              <span class="label label-hh">hours</span>
      *          </span>
-     *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item countdown-item-mm">
-     *              <span class="countdown-mm">1</span>
-     *              <span class="countdown-mm">6</span>
-     *              <span class="countdown-label">minutes</span>
+     *          <span class="separator">:</span>
+     *          <span class="item item-mm">
+     *              <span class="mm-1"></span>
+     *              <span class="mm-2"></span>
+     *              <span class="label label-mm">minutes</span>
      *          </span>
-     *          <span class="countdown-separator">:</span>
-     *          <span class="countdown-item countdown-item-ss">
-     *              <span class="countdown-ss">2</span>
-     *              <span class="countdown-ss">2</span>
-     *              <span class="countdown-label">seconds</span>
+     *          <span class="separator">:</span>
+     *          <span class="item item-ss">
+     *              <span class="ss-1"></span>
+     *              <span class="ss-2"></span>
+     *              <span class="label label-ss">seconds</span>
      *          </span>
      *      </time>
     */
@@ -102,11 +102,10 @@
     var pluginName = 'countDown';
     var defaults = {
           css_class:        'countdown'
-        , with_empty_day:   false
+        , always_show_days: false
         , with_labels:      true
         , with_seconds:     true
         , with_separators:  true
-        , fast_forward:     false  // "Kill my CPU".
         , label_dd:         'days'
         , label_hh:         'hours'
         , label_mm:         'minutes'
@@ -145,11 +144,11 @@
                 this.time_element = $('<time></time>');
                 this.element.html(this.time_element);
             }
-            this.delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
-            this.set_timeout_delay = this.options.fast_forward ? 10 : this.delay;
+            this.set_timeout_delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
             this.time_element.addClass(this.options.css_class);
+            this.markup();
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
-            this.doCountDown(this.end_date.getTime() - new Date().getTime());
+            this.doCountDown();
         }
 
         , sToMs: function (s) {
@@ -320,7 +319,66 @@
 
         }
 
-        , doCountDown: function (ms) {
+        , markup: function () {
+
+            // Prepare the HTML content of the <time> element.
+
+            var html = [];
+
+            html.push(
+                '<span class="item item-dd">',
+                    '<span class="dd"></span>',
+                    '<span class="label label-dd">', this.options.label_dd, '</span>',
+                '</span>',
+                '<span class="separator separator-dd">', this.options.separator_days, '</span>',
+                '<span class="item item-hh">',
+                    '<span class="hh-1"></span>',
+                    '<span class="hh-2"></span>',
+                    '<span class="label label-hh">', this.options.label_hh, '</span>',
+                '</span>',
+                '<span class="separator">', this.options.separator, '</span>',
+                '<span class="item item-mm">',
+                    '<span class="mm-1"></span>',
+                    '<span class="mm-2"></span>',
+                    '<span class="label label-mm">', this.options.label_mm, '</span>',
+                '</span>',
+                '<span class="separator">', this.options.separator, '</span>',
+                '<span class="item item-ss">',
+                    '<span class="ss-1"></span>',
+                    '<span class="ss-2"></span>',
+                    '<span class="label label-ss">', this.options.label_ss, '</span>',
+                '</span>'
+            );
+
+            this.time_element.html(html.join(''));
+
+            if (!this.options.with_labels) {
+                this.time_element.find('.label').remove();
+            }
+            if (!this.options.with_separators) {
+                this.time_element.find('.separator').remove();
+            }
+            if (!this.options.with_seconds) {
+                this.time_element.find('.item-ss').remove();
+                this.time_element.find('.separator').last().remove();
+            }
+
+            this.item_dd       = this.time_element.find('.item-dd');
+            this.separator_dd  = this.time_element.find('.separator-dd');
+            this.remaining_dd  = this.time_element.find('.dd');
+            this.remaining_hh1 = this.time_element.find('.hh-1');
+            this.remaining_hh2 = this.time_element.find('.hh-2');
+            this.remaining_mm1 = this.time_element.find('.mm-1');
+            this.remaining_mm2 = this.time_element.find('.mm-2');
+            this.remaining_ss1 = this.time_element.find('.ss-1');
+            this.remaining_ss2 = this.time_element.find('.ss-2');
+
+        }
+
+        , doCountDown: function () {
+            // In iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
+            // We have to evaluate the remaining time with a new Date() object.
+            var ms = this.end_date.getTime() - new Date().getTime();
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
             var hh = this.msToH(ms);
@@ -336,12 +394,15 @@
                 , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
                 , 'dd': dd.toString()
             });
+            // If the countdown is running on a minute basis, end it as soon as there is no minute left.
+            if (!this.options.with_seconds && mm === 0) {
+                this.time_element.trigger('time.elapsed');
+                return;
+            }
             // Reload it.
             if (ms > 0) {
                 var self = this;
-                setTimeout(function () {
-                    self.doCountDown(ms - self.delay)
-                }, self.set_timeout_delay);
+                setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
             } else {
                 this.time_element.trigger('time.elapsed');
             }
@@ -364,73 +425,20 @@
                 attr.push(remaining.ss, 'S');
             }
 
-            // Prepare the HTML content of the <time> element.
-            var html           = [];
-            var label_dd       = '';
-            var label_hh       = '';
-            var label_mm       = '';
-            var label_ss       = '';
-            var separator      = '';
-            var separator_days = '';
-            // Separators.
-            if (this.options.with_separators) {
-                separator_days = [
-                    '<span class="', this.options.css_class, '-separator-dd">',
-                        this.options.separator_days,
-                    '</span>'
-                ].join('');
-                separator = [
-                    '<span class="', this.options.css_class, '-separator-dd">',
-                        this.options.separator,
-                    '</span>'
-                ].join('');
-            }
-            // Labels.
-            if (this.options.with_labels) {
-                label_dd = '<span class="' + this.options.css_class + '-label">' + this.options.label_dd + '</span>';
-                label_hh = '<span class="' + this.options.css_class + '-label">' + this.options.label_hh + '</span>';
-                label_mm = '<span class="' + this.options.css_class + '-label">' + this.options.label_mm + '</span>';
-                label_ss = '<span class="' + this.options.css_class + '-label">' + this.options.label_ss + '</span>';
-            }
-            // Days.
-            if (remaining.dd !== '0' || this.options.with_empty_day) {
-                html.push(
-                    '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-dd">',
-                        '<span class="', this.options.css_class, '-dd">', remaining.dd, '</span>',
-                        label_dd,
-                    '</span>',
-                    separator_days
-                );
-            }
-            html.push(
-                // Hours.
-                '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-hh">',
-                    '<span class="', this.options.css_class, '-hh">', remaining.hh[0], '</span>',
-                    '<span class="', this.options.css_class, '-hh">', remaining.hh[1], '</span>',
-                    label_hh,
-                '</span>',
-                // Minutes.
-                separator,
-                '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-mm">',
-                    '<span class="', this.options.css_class, '-mm">', remaining.mm[0], '</span>',
-                    '<span class="', this.options.css_class, '-mm">', remaining.mm[1], '</span>',
-                    label_mm,
-                '</span>'
-            );
-            // Seconds.
-            if (this.options.with_seconds) {
-                html.push(
-                    separator,
-                    '<span class="', this.options.css_class, '-item ', this.options.css_class, '-item-ss">',
-                        '<span class="', this.options.css_class, '-ss">', remaining.ss[0], '</span>',
-                        '<span class="', this.options.css_class, '-ss">', remaining.ss[1], '</span>',
-                        label_ss,
-                    '</span>'
-                );
+            this.time_element.attr('datetime', attr.join(''));
+
+            if (!this.options.always_show_days && remaining.dd === '0') {
+                this.item_dd.hide();
+                this.separator_dd.hide();
             }
 
-            this.time_element.attr('datetime', attr.join(''));
-            this.time_element.html(html.join(''));
+            this.remaining_dd.text(remaining.dd);
+            this.remaining_hh1.text(remaining.hh[0]);
+            this.remaining_hh2.text(remaining.hh[1]);
+            this.remaining_mm1.text(remaining.mm[0]);
+            this.remaining_mm2.text(remaining.mm[1]);
+            this.remaining_ss1.text(remaining.ss[0]);
+            this.remaining_ss2.text(remaining.ss[1]);
 
         }
 
