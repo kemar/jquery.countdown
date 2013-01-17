@@ -99,11 +99,10 @@ Available options
 -----------------
 
 - ``css_class``: the css class of the generated ``<time>`` tag (default: ``countdown``).
-- ``with_empty_day``: always display days if true even if none remains (default: ``false``).
+- ``always_show_days``: always display days if true even if none remains (default: ``false``).
 - ``with_labels``: display or hide labels (default: ``true``).
 - ``with_seconds``: display or hide seconds, if false ``setTimeout()`` delay is in minutes (default: ``true``).
 - ``with_separators``: display or hide separators between days, hours, minutes and seconds (default: ``true``).
-- ``fast_forward``: kill your CPU (default: ``false``).
 - ``label_dd``: label's text for days (default: ``days``).
 - ``label_hh``: label's text for hours (default: ``hours``).
 - ``label_mm``: label's text for minutes (default: ``minutes``).
@@ -121,27 +120,27 @@ A valid ``<time>`` tag representing a duration is generated.
 .. code-block::
 
     <time class="countdown" datetime="P12DT05H16M22S">
-        <span class="countdown-item countdown-item-dd">
-            <span class="countdown-dd">12</span>
-            <span class="countdown-label">days</span>
+        <span class="item item-dd">
+            <span class="dd"></span>
+            <span class="label label-dd">days</span>
         </span>
-        <span class="countdown-separator">:</span>
-        <span class="countdown-item countdown-item-hh">
-            <span class="countdown-hh">0</span>
-            <span class="countdown-hh">5</span>
-            <span class="countdown-label">hours</span>
+        <span class="separator separator-dd">,</span>
+        <span class="item item-hh">
+            <span class="hh-1"></span>
+            <span class="hh-2"></span>
+            <span class="label label-hh">hours</span>
         </span>
-        <span class="countdown-separator">:</span>
-        <span class="countdown-item countdown-item-mm">
-            <span class="countdown-mm">1</span>
-            <span class="countdown-mm">6</span>
-            <span class="countdown-label">minutes</span>
+        <span class="separator">:</span>
+        <span class="item item-mm">
+            <span class="mm-1"></span>
+            <span class="mm-2"></span>
+            <span class="label label-mm">minutes</span>
         </span>
-        <span class="countdown-separator">:</span>
-        <span class="countdown-item countdown-item-ss">
-            <span class="countdown-ss">2</span>
-            <span class="countdown-ss">2</span>
-            <span class="countdown-label">seconds</span>
+        <span class="separator">:</span>
+        <span class="item item-ss">
+            <span class="ss-1"></span>
+            <span class="ss-2"></span>
+            <span class="label label-ss">seconds</span>
         </span>
     </time>
 

@@ -7,13 +7,16 @@ body {
     font-size: 0;  /* Hack for inline and inline-block extra markup generated spaces */
     margin: 50px 100px 100px 50px;
 }
-.countdown-item {
+.countdown .item {
     position: relative;
 }
-.countdown-dd,
-.countdown-hh,
-.countdown-mm,
-.countdown-ss {
+.countdown .dd,
+.countdown .hh-1,
+.countdown .hh-2,
+.countdown .mm-1,
+.countdown .mm-2,
+.countdown .ss-1,
+.countdown .ss-2 {
     font-family: 'Righteous', cursive;
     background: #F6F6F6;
     color: #000;
@@ -25,7 +28,7 @@ body {
     padding: 5px 16px;
     text-align: center;
 }
-.countdown-label {
+.countdown .label {
     font-style: italic;
     text-transform: capitalize;
     background: #F6F6F6;
@@ -37,8 +40,8 @@ body {
     left: 0;
     bottom: -44px;
 }
-.countdown-separator-dd,
-.countdown-separator {
+.countdown .separator-dd,
+.countdown .separator {
     color: #FFF;
     font-size: 40px;
     position: relative;

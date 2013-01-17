@@ -11,7 +11,7 @@ body {
     -webkit-transform: skew(-2deg, -2deg);
     transform: skew(-2deg, -2deg);
 }
-.countdown-item {
+.countdown .item {
     display: block;
     float: left;
     position: relative;
@@ -26,14 +26,17 @@ body {
     border: 2px solid #FFF;
     box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
 }
-.countdown-dd,
-.countdown-hh,
-.countdown-mm,
-.countdown-ss {
+.countdown .dd,
+.countdown .hh-1,
+.countdown .hh-2,
+.countdown .mm-1,
+.countdown .mm-2,
+.countdown .ss-1,
+.countdown .ss-2 {
     font: italic;
     text-shadow: 1px 1px 10px #FFF, 1px 1px 3px #333;
 }
-.countdown-label {
+.countdown .label {
     font-weight: normal;
     position: absolute;
     top: 0;
