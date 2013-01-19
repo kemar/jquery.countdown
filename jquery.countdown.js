@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.1
+ * jQuery Countdown - v1.2
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -112,7 +112,6 @@
         , label_ss:         'seconds'
         , separator:        ':'
         , separator_days:   ','
-        , onTimeElapsed:    function () {}
     };
 
     function CountDown(element, options) {
@@ -144,50 +143,49 @@
                 this.time_element = $('<time></time>');
                 this.element.html(this.time_element);
             }
-            this.set_timeout_delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
-            this.time_element.addClass(this.options.css_class);
             this.markup();
+            this.set_timeout_delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
         }
 
+        // Convert seconds to milliseconds.
         , sToMs: function (s) {
-            // Convert seconds to milliseconds.
             return parseInt(s, 10) * 1000;
         }
 
+        // Convert minutes to milliseconds.
         , mToMs: function (m) {
-            // Convert minutes to milliseconds.
             return parseInt(m, 10) * 60 * 1000;
         }
 
+        // Convert hours to milliseconds.
         , hToMs: function (h) {
-            // Convert hours to milliseconds.
             return parseInt(h, 10) * 60 * 60 * 1000;
         }
 
+        // Convert days to milliseconds.
         , dToMs: function (d) {
-            // Convert days to milliseconds.
             return parseInt(d, 10) * 24 * 60 * 60 * 1000;
         }
 
+        // Returns the seconds (0-59) of the specified timedelta expressed in milliseconds.
         , msToS: function (ms) {
-            // Convert milliseconds to seconds.
             return parseInt((ms / 1000) % 60, 10);
         }
 
+        // Returns the minutes (0-59) of the specified timedelta expressed in milliseconds.
         , msToM: function (ms) {
-            // Convert milliseconds to minutes.
             return parseInt((ms / 1000 / 60) % 60, 10);
         }
 
+        // Returns the hours (0-23) of the specified timedelta expressed in milliseconds.
         , msToH: function (ms) {
-            // Convert milliseconds to hours.
             return parseInt((ms / 1000 / 60 / 60) % 24, 10);
         }
 
+        // Returns the number of days of the specified timedelta expressed in milliseconds.
         , msToD: function (ms) {
-            // Convert milliseconds to days.
             return parseInt((ms / 1000 / 60 / 60 / 24), 10);
         }
 
@@ -320,11 +318,8 @@
         }
 
         , markup: function () {
-
             // Prepare the HTML content of the <time> element.
-
             var html = [];
-
             html.push(
                 '<span class="item item-dd">',
                     '<span class="dd"></span>',
@@ -349,9 +344,8 @@
                     '<span class="label label-ss">', this.options.label_ss, '</span>',
                 '</span>'
             );
-
             this.time_element.html(html.join(''));
-
+            // Customize HTML according to options.
             if (!this.options.with_labels) {
                 this.time_element.find('.label').remove();
             }
@@ -362,7 +356,7 @@
                 this.time_element.find('.item-ss').remove();
                 this.time_element.find('.separator').last().remove();
             }
-
+            // Cache elements.
             this.item_dd       = this.time_element.find('.item-dd');
             this.separator_dd  = this.time_element.find('.separator-dd');
             this.remaining_dd  = this.time_element.find('.dd');
@@ -372,7 +366,8 @@
             this.remaining_mm2 = this.time_element.find('.mm-2');
             this.remaining_ss1 = this.time_element.find('.ss-1');
             this.remaining_ss2 = this.time_element.find('.ss-2');
-
+            // Set the css class of the <time> element.
+            this.time_element.addClass(this.options.css_class);
         }
 
         , doCountDown: function () {
@@ -394,22 +389,21 @@
                 , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
                 , 'dd': dd.toString()
             });
-            // If the countdown is running on a minute basis, end it as soon as there is no minute left.
+            // If the countdown is running on a minute basis, stop it as soon as there is no minute left.
             if (!this.options.with_seconds && mm === 0) {
                 this.time_element.trigger('time.elapsed');
                 return;
             }
-            // Reload it.
-            if (ms > 0) {
-                var self = this;
-                setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
-            } else {
+            if (dd === 0 && mm === 0 && hh === 0 && ss === 0) {
                 this.time_element.trigger('time.elapsed');
+                return;
             }
+            // Reload it.
+            var self = this;
+            setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
         }
 
         , displayRemainingTime: function (remaining) {
-
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
             // i.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
@@ -418,20 +412,17 @@
             if (remaining.dd !== '0') {
                 attr.push(remaining.dd, 'D');
             }
-            attr.push('T');
-            attr.push(remaining.hh, 'H');
-            attr.push(remaining.mm, 'M');
+            attr.push('T', remaining.hh, 'H', remaining.mm, 'M');
             if (this.options.with_seconds) {
                 attr.push(remaining.ss, 'S');
             }
-
             this.time_element.attr('datetime', attr.join(''));
-
+            // Hide days if necessary.
             if (!this.options.always_show_days && remaining.dd === '0') {
                 this.item_dd.hide();
                 this.separator_dd.hide();
             }
-
+            // Update countdown values.
             this.remaining_dd.text(remaining.dd);
             this.remaining_hh1.text(remaining.hh[0]);
             this.remaining_hh2.text(remaining.hh[1]);
@@ -439,7 +430,6 @@
             this.remaining_mm2.text(remaining.mm[1]);
             this.remaining_ss1.text(remaining.ss[0]);
             this.remaining_ss2.text(remaining.ss[1]);
-
         }
 
     };

@@ -7,7 +7,9 @@ article#content {
     width: 90%;
     margin: 0 auto 100px auto;
 }
-a { color: #B7B7B7; }
+a {
+    color: #B7B7B7;
+}
 h2 {
     margin-top: 80px;
     font-size: 16px;
@@ -20,6 +22,7 @@ code { font-family: Consolas, "Liberation Mono", Courier, monospace; }
 .tag { color: #E11144; }
 .attr { color: #009999; }
 
+/* Inspiration: http://fff.cmiscm.com/#!/section/flipclock */
 .countdown {
     display: table-cell;
     font-weight: normal;
