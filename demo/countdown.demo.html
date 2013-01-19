@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Countdown Demo</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:600,700' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Righteous" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="countdown.demo.css" type="text/css">
+    </head>
+    <body>
+
+        <div id="content">
+
+            <!-- Valid global date and time string -->
+            <div><time>2014-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
+            <div><time>2014-12-08T08:47:00-0800</time></div><!-- California -->
+            <div><time>2014-12-08T16:47:00Z</time></div><!-- UTC -->
+
+            <!-- Human readable duration -->
+            <h1 class="alt-1">24h00m59s</h1>
+            <h1 class="alt-1">4h 18m 3s</h1>
+            <h1 class="alt-1">00:01</h1>
+
+            <!-- Valid time string -->
+            <div class="alt-2">12:30:39.929</div>
+            <!-- Valid duration string -->
+            <div class="alt-2">P2DT20H00M10S</div>
+            <!-- Python datetime.timedelta str output -->
+            <!-- print datetime.timedelta(days=600, hours=3, minutes=59, seconds=12) -->
+            <div class="alt-2">600 days, 3:59:12</div>
+
+        </div>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="../jquery.countdown.js"></script>
+        <script>
+        window.jQuery(function ($) {
+            "use strict";
+
+            $('time').countDown({
+                with_separators: false
+            });
+            $('.alt-1').countDown({
+                css_class: 'countdown-alt-1'
+            });
+            $('.alt-2').countDown({
+                css_class: 'countdown-alt-2'
+            });
+
+        });
+        </script>
+
+    </body>
+</html>
