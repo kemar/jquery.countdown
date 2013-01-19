@@ -109,7 +109,18 @@ Available options
 - ``label_ss``: label's text for seconds (default: ``seconds``).
 - ``separator``: separator character between hours, minutes and seconds (default: ``:``).
 - ``separator_days``: separator character between days and hours (default: ``,``).
-- ``onTimeElapsed``: callback when a countdown is over (default: ``function () {}``).
+
+
+Events
+------
+
+``time.elapsed``: this event fires immediately when the time is elapsed.
+
+.. code-block:: javascript
+
+    $('#my-countdown').on('time.elapsed', function () {
+        // do something...
+    });
 
 
 Generated markup

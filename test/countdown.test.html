@@ -187,11 +187,11 @@
                 $("#toISOString").text(new Date("December 20, 2014 10:24:00").toISOString());
             }
 
-            $('div, time').countDown({
-                onTimeElapsed:  function () {
-                    console.log($(this));
-                }
-            });
+            $('div, time')
+                .countDown()
+                .on('time.elapsed', function () {
+                    console.log(this);
+                });
 
         });
         </script>
