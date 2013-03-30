@@ -278,7 +278,7 @@
                 now.setDate(time_array[3]);
                 now.setMonth(time_array[2] - 1);
                 now.setFullYear(time_array[1]);
-                now.setTime(now.getTime() + ms_offset);  // Set timezone offset.
+                now.setTime(now.getTime() + ms_offset);  // Add or substract timezone offset => UTC time.
                 return now;
             }
 
@@ -373,7 +373,7 @@
         , doCountDown: function () {
             // In iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
             // We have to evaluate the remaining time with a new Date() object.
-            var ms = this.end_date.getTime() - new Date().getTime();
+            var ms = this.end_date - new Date();
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
             var hh = this.msToH(ms);
