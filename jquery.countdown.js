@@ -389,7 +389,7 @@
                 , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
                 , 'dd': dd.toString()
             });
-            // If the countdown is running on a minute basis, stop it as soon as there is no minute left.
+            // If seconds are hidden, stop the counter as soon as there is no minute left.
             if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
                 this.time_element.trigger('time.elapsed');
                 return;
