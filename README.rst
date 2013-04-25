@@ -101,7 +101,7 @@ Available options
 - ``css_class``: the css class of the generated ``<time>`` tag (default: ``countdown``).
 - ``always_show_days``: always display days if true even if none remains (default: ``false``).
 - ``with_labels``: display or hide labels (default: ``true``).
-- ``with_seconds``: display or hide seconds, if false ``setTimeout()`` delay is in minutes (default: ``true``).
+- ``with_seconds``: display or hide seconds (default: ``true``).
 - ``with_separators``: display or hide separators between days, hours, minutes and seconds (default: ``true``).
 - ``label_dd``: label's text for days (default: ``days``).
 - ``label_hh``: label's text for hours (default: ``hours``).

@@ -144,7 +144,7 @@
                 this.element.html(this.time_element);
             }
             this.markup();
-            this.set_timeout_delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
+            this.set_timeout_delay = this.sToMs(1);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
         }
@@ -390,7 +390,7 @@
                 , 'dd': dd.toString()
             });
             // If the countdown is running on a minute basis, stop it as soon as there is no minute left.
-            if (!this.options.with_seconds && mm === 0) {
+            if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
                 this.time_element.trigger('time.elapsed');
                 return;
             }
