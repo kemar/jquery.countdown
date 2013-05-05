@@ -271,13 +271,12 @@
                     ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
                 }
                 var now = new Date();
-                hh = time_array[4] ? this.hToMs(time_array[4]) : 0;
-                mm = time_array[5] ? this.mToMs(time_array[5]) : 0;
-                ss = time_array[6] ? this.sToMs(time_array[6]) : 0;
-                now.setTime(hh + mm + ss);
-                now.setDate(time_array[3]);
-                now.setMonth(time_array[2] - 1);
-                now.setFullYear(time_array[1]);
+                now.setUTCHours(time_array[4]);
+                now.setUTCMinutes(time_array[5]);
+                now.setUTCSeconds(time_array[6]);
+                now.setUTCDate(time_array[3]);
+                now.setUTCMonth(time_array[2] - 1);
+                now.setUTCFullYear(time_array[1]);
                 now.setTime(now.getTime() + ms_offset);  // Add or substract timezone offset => UTC time.
                 return now;
             }
