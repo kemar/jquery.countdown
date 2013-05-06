@@ -33,7 +33,7 @@ Create a countdown from a `valid global date and time <http://www.whatwg.org/spe
 
     <div>2012-12-08T17:47:00+0100</div><!-- Paris (winter) -->
     <div>2012-12-08T08:47:00-0800</div><!-- California -->
-    <div>2012-12-08T16:47:00Z</div><!-- UTC -->
+    <div>2012-12-08T16:47:00+0000</div><!-- UTC -->
 
 
 Create a countdown from a `valid time <http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string>`_ string.
