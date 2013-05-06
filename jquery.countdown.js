@@ -144,7 +144,7 @@
                 this.element.html(this.time_element);
             }
             this.markup();
-            this.set_timeout_delay = this.options.with_seconds ? this.sToMs(1) : this.mToMs(1);
+            this.set_timeout_delay = this.sToMs(1);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
         }
@@ -270,15 +270,22 @@
                     ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
                     ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
                 }
+
                 var now = new Date();
-                hh = time_array[4] ? this.hToMs(time_array[4]) : 0;
-                mm = time_array[5] ? this.mToMs(time_array[5]) : 0;
-                ss = time_array[6] ? this.sToMs(time_array[6]) : 0;
-                now.setTime(hh + mm + ss);
-                now.setDate(time_array[3]);
-                now.setMonth(time_array[2] - 1);
-                now.setFullYear(time_array[1]);
-                now.setTime(now.getTime() + ms_offset);  // Set timezone offset.
+                now.setUTCHours(time_array[4] || 0);
+                now.setUTCMinutes(time_array[5] || 0);
+                now.setUTCSeconds(time_array[6] || 0);
+                now.setUTCDate(time_array[3]);
+                now.setUTCMonth(time_array[2] - 1);
+                now.setUTCFullYear(time_array[1]);
+
+                now.setTime(now.getTime() + ms_offset);  // Obtain UTC by adding the parsed UTC offset if any.
+
+                var local_offset = this.mToMs(new Date().getTimezoneOffset());
+                if (local_offset !== ms_offset) {
+                    now.setTime(now.getTime() + local_offset);
+                }
+
                 return now;
             }
 
@@ -373,7 +380,7 @@
         , doCountDown: function () {
             // In iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
             // We have to evaluate the remaining time with a new Date() object.
-            var ms = this.end_date.getTime() - new Date().getTime();
+            var ms = this.end_date - new Date();
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
             var hh = this.msToH(ms);
@@ -389,8 +396,8 @@
                 , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
                 , 'dd': dd.toString()
             });
-            // If the countdown is running on a minute basis, stop it as soon as there is no minute left.
-            if (!this.options.with_seconds && mm === 0) {
+            // If seconds are hidden, stop the counter as soon as there is no minute left.
+            if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
                 this.time_element.trigger('time.elapsed');
                 return;
             }
