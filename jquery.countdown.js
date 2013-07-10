@@ -193,16 +193,6 @@
 
             var d, dd, hh, mm, ss, time_array;
 
-            // Try to parse a date/time string.
-            // new Date(d).toDateString() => Sat Dec 20 2014
-            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
-            d = Date.parse(str);
-            if (!isNaN(d)) {
-                return new Date(d);
-            }
-
             // Try to parse a valid duration string representing a duration.
             // Limited to days, hours, minutes and seconds.
             //
@@ -253,34 +243,40 @@
             //     (\d{2})          => (hours)
             //     :                => colon
             //     (\d{2})          => (minutes)
-            //     (?::(\d{2}))?    => colon and seconds (optional)
-            //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
-            //     ([Z\+\-\:\d]+)?  => (time-zone) offset string http://goo.gl/CJHLr
+            //     (?:\:(\d{2}))?    => colon and seconds (optional)
+            //     (?:\.(\d{1,3}))?   => full stop character (.) and fractional part of second (optional)
+            //     ([Z\+\-\:\d]+)?  => time-zone offset string http://goo.gl/CJHLr (optional)
             // $
             time_array = str.match(
-                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d{1,3})?([Z\+\-\:\d]+)?$/);
+                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
             if (time_array) {
                 // Convert UTC offset from string to milliseconds.
                 // +0100 = ["+0100", "+", "01", "00"]
                 // -08:00 = ["-08:00", "-", "08", "00"]
                 // -10:30 = ["-10:30", "-", "10", "30"]
-                var offset = time_array[7].match(/^([\+\-])?(\d{2}):?(\d{2})$/);
+                var offset = time_array[8] ? time_array[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
                 var ms_offset = 0;
                 if (offset) {
                     ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
                     ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
                 }
 
+                // A Date object set to the current local date and time.
                 var now = new Date();
+
+                // Sets date and time according to universal time based on the values of time_array.
                 now.setUTCHours(time_array[4] || 0);
                 now.setUTCMinutes(time_array[5] || 0);
                 now.setUTCSeconds(time_array[6] || 0);
+                now.setUTCMilliseconds(time_array[7] || 0);
                 now.setUTCDate(time_array[3]);
                 now.setUTCMonth(time_array[2] - 1);
                 now.setUTCFullYear(time_array[1]);
 
-                now.setTime(now.getTime() + ms_offset);  // Obtain UTC by adding the parsed UTC offset if any.
+                // Add the UTC offset if any.
+                now.setTime(now.getTime() + ms_offset);
 
+                // Add the time-zone offset for the current locale if necessary.
                 var local_offset = this.mToMs(new Date().getTimezoneOffset());
                 if (local_offset !== ms_offset) {
                     now.setTime(now.getTime() + local_offset);
@@ -320,6 +316,16 @@
                 ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
                 d.setTime(d.getTime() + dd + hh + mm + ss);
                 return d;
+            }
+
+            // Fallback solution: try to parse a date/time string.
+            // new Date(d).toDateString() => Sat Dec 20 2014
+            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
+            d = Date.parse(str);
+            if (!isNaN(d)) {
+                return new Date(d);
             }
 
         }
@@ -378,9 +384,13 @@
         }
 
         , doCountDown: function () {
-            // In iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
-            // We have to evaluate the remaining time with a new Date() object.
-            var ms = this.end_date - new Date();
+            // Calculate the difference between the two dates in milliseconds.
+            // Note: in iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
+            // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
+            // setTimeout() will always be executed after the specified `set_timeout_delay` which would have allowed us
+            // to call the doCountDown() function with (ms - this.set_timeout_delay) as argument.
+            var ms = this.end_date.getTime() - new Date().getTime();
+            // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
             var hh = this.msToH(ms);
@@ -410,6 +420,8 @@
             setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
         }
 
+        // @param remaining: an object literal containing a string representation of days, hours, minutes and
+        // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
         , displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
