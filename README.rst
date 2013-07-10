@@ -4,6 +4,12 @@
 Unobtrusive and easily skinable `countdown jQuery plugin <http://kemar.github.com/jquery.countdown/>`_ generating a <time> tag.
 
 
+Supported browsers
+------------------
+
+To use the countdown jQuery plugin you need an `up-to-date web browser supporting the HTML5 time element <http://caniuse.com/#feat=html5semantic>`_.
+
+
 Installation
 ------------
 
