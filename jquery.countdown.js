@@ -193,16 +193,6 @@
 
             var d, dd, hh, mm, ss, time_array;
 
-            // Try to parse a date/time string.
-            // new Date(d).toDateString() => Sat Dec 20 2014
-            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
-            d = Date.parse(str);
-            if (!isNaN(d)) {
-                return new Date(d);
-            }
-
             // Try to parse a valid duration string representing a duration.
             // Limited to days, hours, minutes and seconds.
             //
@@ -320,6 +310,16 @@
                 ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
                 d.setTime(d.getTime() + dd + hh + mm + ss);
                 return d;
+            }
+
+            // Fallback solution: try to parse a date/time string.
+            // new Date(d).toDateString() => Sat Dec 20 2014
+            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
+            d = Date.parse(str);
+            if (!isNaN(d)) {
+                return new Date(d);
             }
 
         }
