@@ -243,34 +243,40 @@
             //     (\d{2})          => (hours)
             //     :                => colon
             //     (\d{2})          => (minutes)
-            //     (?::(\d{2}))?    => colon and seconds (optional)
-            //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
-            //     ([Z\+\-\:\d]+)?  => (time-zone) offset string http://goo.gl/CJHLr
+            //     (?:\:(\d{2}))?    => colon and seconds (optional)
+            //     (?:\.(\d{1,3}))?   => full stop character (.) and fractional part of second (optional)
+            //     ([Z\+\-\:\d]+)?  => time-zone offset string http://goo.gl/CJHLr (optional)
             // $
             time_array = str.match(
-                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d{1,3})?([Z\+\-\:\d]+)?$/);
+                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
             if (time_array) {
                 // Convert UTC offset from string to milliseconds.
                 // +0100 = ["+0100", "+", "01", "00"]
                 // -08:00 = ["-08:00", "-", "08", "00"]
                 // -10:30 = ["-10:30", "-", "10", "30"]
-                var offset = time_array[7].match(/^([\+\-])?(\d{2}):?(\d{2})$/);
+                var offset = time_array[8] ? time_array[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
                 var ms_offset = 0;
                 if (offset) {
                     ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
                     ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
                 }
 
+                // A Date object set to the current local date and time.
                 var now = new Date();
+
+                // Sets date and time according to universal time based on the values of time_array.
                 now.setUTCHours(time_array[4] || 0);
                 now.setUTCMinutes(time_array[5] || 0);
                 now.setUTCSeconds(time_array[6] || 0);
+                now.setUTCMilliseconds(time_array[7] || 0);
                 now.setUTCDate(time_array[3]);
                 now.setUTCMonth(time_array[2] - 1);
                 now.setUTCFullYear(time_array[1]);
 
-                now.setTime(now.getTime() + ms_offset);  // Obtain UTC by adding the parsed UTC offset if any.
+                // Add the UTC offset if any.
+                now.setTime(now.getTime() + ms_offset);
 
+                // Add the time-zone offset for the current locale if necessary.
                 var local_offset = this.mToMs(new Date().getTimezoneOffset());
                 if (local_offset !== ms_offset) {
                     now.setTime(now.getTime() + local_offset);
