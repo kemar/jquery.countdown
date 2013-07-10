@@ -384,9 +384,13 @@
         }
 
         , doCountDown: function () {
-            // In iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
-            // We have to evaluate the remaining time with a new Date() object.
-            var ms = this.end_date - new Date();
+            // Calculate the difference between the two dates in milliseconds.
+            // Note: in iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
+            // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
+            // setTimeout() will always be executed after the specified `set_timeout_delay` which would have allowed us
+            // to call the doCountDown() function with (ms - this.set_timeout_delay) as argument.
+            var ms = this.end_date.getTime() - new Date().getTime();
+            // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
             var hh = this.msToH(ms);
@@ -416,6 +420,8 @@
             setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
         }
 
+        // @param remaining: an object literal containing a string representation of days, hours, minutes and
+        // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
         , displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
