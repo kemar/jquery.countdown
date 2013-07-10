@@ -18,6 +18,11 @@
                 font-weight: bold;
                 margin-left: 10px;
             }
+            h2 {
+                font-style: italic;
+                color: grey;
+                margin: 10px 0 -10px 40px;
+            }
             .countdown {
                 display: block;
             }
@@ -30,6 +35,9 @@
             time:not(.countdown) {
                 border: 10px solid red;
             }
+            #generated-markup {
+                margin-left: 40px;
+            }
         </style>
     </head>
     <body>
@@ -37,8 +45,10 @@
         <!--
         Generated markup
         -->
-        <h1>
-        <time class="countdown" datetime="P12DT05H16M22S">
+
+        <h1>Generated markup</h1>
+
+        <time id="generated-markup" class="countdown" datetime="P12DT05H16M22S">
             <span class="countdown-item">
                 <span class="countdown-dd">12</span>
                 <span class="countdown-label">days</span>
@@ -62,94 +72,224 @@
                 <span class="countdown-label">seconds</span>
             </span>
         </time>
-        </h1>
+
+        <br>
+
 
         <!--
         A <time> datetime attribute with a valid global date and time string, time string or duration string
         -->
+
+        <hr>
+
         <h1>Datetime attribute</h1>
+
+        <h2>2013-12-13T17:43:00</h2>
+
         <div>
             <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
         </div>
+
+        <h2>02:30:30</h2>
         <div>
             <time datetime="02:30:30">Expires in 2 hours 30 minutes 30 seconds</time>
         </div>
+
+        <h2>P61D</h2>
         <div>
             <time datetime="P61D">61 days</time>
         </div>
 
+
         <!--
-        Valid global date and time string
+        Valid global date and time string with TZ
         http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-time-element
         -->
 
+        <hr>
+
         <h1>Valid global date and time string</h1>
 
+        <h2>Paris (summer) 2014-05-06T21:00:00+0200</h2>
         <div><time>2014-05-06T21:00:00+0200</time></div><!-- Paris (summer) -->
+
+        <h2>California (summer) 2014-05-06T14:00:00-0700</h2>
         <div><time>2014-05-06T14:00:00-0700</time></div><!-- California (summer) -->
 
+        <hr>
+
+        <h2>Paris (winter) 2014-12-08T17:47:00+0100</h2>
         <div><time>2014-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
+
+        <h2>California (winter) 2014-12-08T08:47:00-0800</h2>
         <div><time>2014-12-08T08:47:00-0800</time></div><!-- California (winter) -->
+
+        <h2>UTC 2014-12-08T16:47:00+0000</h2>
         <div><time>2014-12-08T16:47:00+0000</time></div><!-- UTC -->
 
+        <hr>
+
+        <h2>Paris (winter) 2013-12-08T17:47:00+0100</h2>
         <div><time>2013-12-08T17:47:00+0100</time></div><!-- Paris (winter) -->
-        <div><time>2013-12-08T08:47:00-0800</time></div><!-- California -->
+
+        <h2>California (winter) 2013-12-08T08:47:00-0800</h2>
+        <div><time>2013-12-08T08:47:00-0800</time></div><!-- California (winter) -->
+
+        <h2>UTC 2013-12-08T16:47:00Z</h2>
         <div><time>2013-12-08T16:47:00Z</time></div><!-- UTC -->
 
+        <hr>
+
+        <!--
+        Valid global date and time string
+        -->
+
+        <h2>2013-11-12T14:54Z</h2>
         <div><time>2013-11-12T14:54Z</time></div>
+
+        <h2>2013-11-12T14:54:39Z</h2>
         <div><time>2013-11-12T14:54:39Z</time></div>
+
+        <h2>2013-11-12T14:54:39.929Z</h2>
         <div><time>2013-11-12T14:54:39.929Z</time></div>
+
+        <h2>2013-11-12T14:54+0000</h2>
         <div><time>2013-11-12T14:54+0000</time></div>
+
+        <h2>2013-11-12T14:54:39+0000</h2>
         <div><time>2013-11-12T14:54:39+0000</time></div>
+
+        <h2>2013-11-12T14:54:39.929+0000</h2>
         <div><time>2013-11-12T14:54:39.929+0000</time></div>
+
+        <h2>2013-11-12T14:54+00:00</h2>
         <div><time>2013-11-12T14:54+00:00</time></div>
+
+        <h2>2013-11-12T14:54:39+00:00</h2>
         <div><time>2013-11-12T14:54:39+00:00</time></div>
+
+        <h2>2013-11-12T14:54:39.929+00:00</h2>
         <div><time>2013-11-12T14:54:39.929+00:00</time></div>
+
+        <h2>2013-11-12T06:54-0800</h2>
         <div><time>2013-11-12T06:54-0800</time></div>
+
+        <h2>2013-11-12T06:54:39-0800</h2>
         <div><time>2013-11-12T06:54:39-0800</time></div>
+
+        <h2>2013-11-12T06:54:39.929-0800</h2>
         <div><time>2013-11-12T06:54:39.929-0800</time></div>
+
+        <h2>2013-11-12T06:54-08:00</h2>
         <div><time>2013-11-12T06:54-08:00</time></div>
+
+        <h2>2013-11-12T06:54:39-08:00</h2>
         <div><time>2013-11-12T06:54:39-08:00</time></div>
+
+        <h2>2013-11-12T06:54:39.929-08:00</h2>
         <div><time>2013-11-12T06:54:39.929-08:00</time></div>
+
+        <h2>2013-11-12 14:54Z</h2>
         <div><time>2013-11-12 14:54Z</time></div>
+
+        <h2>2013-11-12 14:54:39Z</h2>
         <div><time>2013-11-12 14:54:39Z</time></div>
+
+        <h2>2013-11-12 14:54:39.929Z</h2>
         <div><time>2013-11-12 14:54:39.929Z</time></div>
+
+        <h2>2013-11-12 14:54+0000</h2>
         <div><time>2013-11-12 14:54+0000</time></div>
+
+        <h2>2013-11-12 14:54:39+0000</h2>
         <div><time>2013-11-12 14:54:39+0000</time></div>
+
+        <h2>2013-11-12 14:54:39.929+0000</h2>
         <div><time>2013-11-12 14:54:39.929+0000</time></div>
+
+        <h2>2013-11-12 14:54+00:00</h2>
         <div><time>2013-11-12 14:54+00:00</time></div>
+
+        <h2>2013-11-12 14:54:39+00:00</h2>
         <div><time>2013-11-12 14:54:39+00:00</time></div>
+
+        <h2>2013-11-12 14:54:39.929+00:00</h2>
         <div><time>2013-11-12 14:54:39.929+00:00</time></div>
+
+        <h2>2013-11-12 06:54-0800</h2>
         <div><time>2013-11-12 06:54-0800</time></div>
+
+        <h2>2013-11-12 06:54:39-0800</h2>
         <div><time>2013-11-12 06:54:39-0800</time></div>
+
+        <h2>2013-11-12 06:54:39.929-0800</h2>
         <div><time>2013-11-12 06:54:39.929-0800</time></div>
+
+        <h2>2013-11-12 06:54-08:00</h2>
         <div><time>2013-11-12 06:54-08:00</time></div>
+
+        <h2>2013-11-12 06:54:39-08:00</h2>
         <div><time>2013-11-12 06:54:39-08:00</time></div>
+
+        <h2>2013-11-12 06:54:39.929-08:00</h2>
         <div><time>2013-11-12 06:54:39.929-08:00</time></div>
+
 
         <!--
         Valid time string
         http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-time-string
         -->
+
+        <hr>
+
         <h1>Valid time string</h1>
+
+        <h2>12:30</h2>
         <div><time>12:30</time></div>
+
+        <h2>12:30:39</h2>
         <div><time>12:30:39</time></div>
+
+        <h2>12:30:39.929</h2>
         <div><time>12:30:39.929</time></div>
+
 
         <!--
         Valid duration string
         http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#valid-duration-string
         -->
+
+        <hr>
+
         <h1>Valid duration string</h1>
+
+        <h2>PT00M10S</h2>
         <div><time>PT00M10S</time></div>
+
+        <h2>PT01H01M15S</h2>
         <div><time>PT01H01M15S</time></div>
+
+        <h2>P2DT20H20M20S</h2>
         <div><time>P2DT20H20M20S</time></div>
+
+        <h2>P2DT20H20M</h2>
         <div><time>P2DT20H20M</time></div>
+
+        <h2>P2DT20H</h2>
         <div><time>P2DT20H</time></div>
+
+        <h2>P2D</h2>
         <div><time>P2D</time></div>
+
+        <h2>PT20H20M20S</h2>
         <div><time>PT20H20M20S</time></div>
+
+        <h2>PT20M20S</h2>
         <div><time>PT20M20S</time></div>
+
+        <h2>PT20S</h2>
         <div><time>PT20S</time></div>
+
 
         <!--
         JavaScript Date.parse() parsable string
@@ -158,29 +298,69 @@
         new Date("December 20, 2014 10:24:00").toISOString() => 2014-12-20T09:24:00.000Z
         new Date("December 20, 2014 10:24:00").toUTCString() => Sat, 20 Dec 2014 09:24:00 GMT
         -->
+
+        <hr>
+
         <h1>Date.parse()</h1>
+
+        <h2>toDateString</h2>
         <div id="toDateString"></div>
+
+        <h2>toGMTString</h2>
         <div id="toGMTString"></div>
+
+        <h2>toISOString</h2>
         <div id="toISOString"></div>
+
+        <h2>toUTCString</h2>
         <div id="toUTCString"></div>
 
+
         <!-- Python datetime.timedelta str output -->
+
+        <hr>
+
         <h1>Timedelta</h1>
+
+        <h2>600 days, 3:59:12</h2>
         <div>600 days, 3:59:12</div><!-- print datetime.timedelta(days=600, hours=3, minutes=59, seconds=12) -->
+
+        <h2>00:59:00</h2>
         <div>00:59:00</div><!-- print datetime.timedelta(days=0, hours=0, minutes=59, seconds=0) -->
+
+        <h2>3:59:12</h2>
         <div>3:59:12</div><!-- print datetime.timedelta(days=0, hours=3, minutes=59, seconds=12) -->
 
+
         <!-- Human readable duration -->
+
+        <hr>
+
         <h1>Human readable</h1>
+
+        <h2>24h00m59s</h2>
         <div>24h00m59s</div>
+
+        <h2>2h 0m</h2>
         <div>2h 0m</div>
+
+        <h2>4h 18m 3s</h2>
         <div>4h 18m 3s</div>
+
+        <h2>600 days, 3:59:12</h2>
         <div>600 days, 3:59:12</div>
+
+        <h2>600 jours, 3:59:12</h2>
         <div>600 jours, 3:59:12</div>
+
+        <h2>00:01</h2>
         <div>00:01</div>
+
+        <h2>240:00:59</h2>
         <div>240:00:59</div>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
         <script>document.write('<script src="../jquery.countdown.js"><\/script>')</script>
         <script>
         window.jQuery(function ($) {
