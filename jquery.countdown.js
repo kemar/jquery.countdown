@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2
+ * jQuery Countdown - v1.2.1
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -224,13 +224,13 @@
             // http://goo.gl/bwpxr
             //
             // 2012-12-08T13:30:39+0100
-            //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", "+0100"]
+            //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", undefined, "+0100"]
             // 2012-12-08T06:54-0800
-            //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, "-0800"]
+            //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, undefined, "-0800"]
             // 2012-12-08 13:30Z
-            //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, "Z"]
+            //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, undefined, "Z"]
             // 2013-12-08 06:54:39.929-10:30
-            //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "-10:30"]
+            //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "929", "-10:30"]
             //
             // RegExp:
             // ^
@@ -243,9 +243,9 @@
             //     (\d{2})          => (hours)
             //     :                => colon
             //     (\d{2})          => (minutes)
-            //     (?:\:(\d{2}))?    => colon and seconds (optional)
-            //     (?:\.(\d{1,3}))?   => full stop character (.) and fractional part of second (optional)
-            //     ([Z\+\-\:\d]+)?  => time-zone offset string http://goo.gl/CJHLr (optional)
+            //     (?:\:(\d{2}))?   => colon and (seconds) (optional)
+            //     (?:\.(\d{1,3}))? => full stop character (.) and fractional part of second (milliseconds) (optional)
+            //     ([Z\+\-\:\d]+)?  => time-zone (offset) string http://goo.gl/CJHLr (optional)
             // $
             time_array = str.match(
                 /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
