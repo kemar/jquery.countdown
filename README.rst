@@ -70,16 +70,6 @@ Create a countdown from a string representation of a Python timedelta object.
     <div>3:59:12</div>
 
 
-Create a countdown from a JavaScript Date.parse() compliant string.
-
-.. code-block::
-
-    <div><script>document.write(date.toDateString())</script></div>
-    <div><script>document.write(date.toGMTString())</script></div>
-    <div><script>document.write(date.toISOString())</script></div>
-    <div><script>document.write(date.toUTCString())</script></div>
-
-
 Create a countdown from a human readable duration string.
 
 .. code-block::
@@ -91,6 +81,16 @@ Create a countdown from a human readable duration string.
     <h1>600 jours, 3:59:12</h1>
     <h1>00:01</h1>
     <h1>240:00:59</h1>
+
+
+Create a countdown from a JavaScript Date.parse() compliant string.
+
+.. code-block::
+
+    <div><script>document.write(date.toDateString())</script></div>
+    <div><script>document.write(date.toGMTString())</script></div>
+    <div><script>document.write(date.toISOString())</script></div>
+    <div><script>document.write(date.toUTCString())</script></div>
 
 
 Rock'n'roll
