@@ -442,13 +442,20 @@
                 this.separator_dd.hide();
             }
             // Update countdown values.
+            var hours1 = parseInt(remaining.hh/10);
+            var hours2 = remaining.hh%10;
+            var minute1 = parseInt(remaining.mm/10);
+            var minute2 = remaining.mm%10;
+            var seconds1 = parseInt(remaining.ss/10);
+            var seconds2 = remaining.ss%10;
+
             this.remaining_dd.text(remaining.dd);
-            this.remaining_hh1.text(remaining.hh[0]);
-            this.remaining_hh2.text(remaining.hh[1]);
-            this.remaining_mm1.text(remaining.mm[0]);
-            this.remaining_mm2.text(remaining.mm[1]);
-            this.remaining_ss1.text(remaining.ss[0]);
-            this.remaining_ss2.text(remaining.ss[1]);
+            this.remaining_hh1.text(hours1);
+            this.remaining_hh2.text(hours2);
+            this.remaining_mm1.text(minute1);
+            this.remaining_mm2.text(minute2);
+            this.remaining_ss1.text(seconds1);
+            this.remaining_ss2.text(seconds2);
         }
 
     };
