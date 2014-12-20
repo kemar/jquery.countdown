@@ -53,7 +53,7 @@ Create a countdown from a [valid duration](https://html.spec.whatwg.org/multipag
 <div>PT10S</div>
 ```
 
-Create a countdown from a string representation of a Python `timedelta` object.
+Create a countdown from the **string representation** of a [Python `timedelta` object](https://docs.python.org/3/library/datetime.html#timedelta-objects).
 
 ```html
 <div>600 days, 3:59:12</div>
@@ -73,7 +73,7 @@ Create a countdown from a human readable duration string.
 <h1>240:00:59</h1>
 ```
 
-Create a countdown from a JavaScript `Date.parse()` compliant string.
+Create a countdown from a string that can be interpreted by the [JavaScript `Date.parse()` function](http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.4.2).
 
 ```html
 <div><script>document.write(date.toDateString())</script></div>
