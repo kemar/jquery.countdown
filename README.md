@@ -1,0 +1,142 @@
+# [jQuery Countdown](https://github.com/kemar/jquery.countdown)
+
+
+Unobtrusive and easily skinable [countdown jQuery plugin](http://kemar.github.io/jquery.countdown/) generating a `<time>` tag.
+
+
+## Supported browsers
+
+To use the countdown jQuery plugin you need an [up-to-date web browser supporting the HTML5 time element](http://caniuse.com/#feat=html5semantic).
+
+
+## Installation
+
+Include this script after jQuery.
+
+    <script src='jquery.js'></script>
+    <script src='jquery.countdown.js'></script>
+
+
+## Usage
+
+Create a countdown from a `<time>` tag `datetime` attribute (valid global date and time, time or duration).
+
+    <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
+    <time datetime="02:30:30">Expires in 2 hours 30 minutes 30 seconds</time>
+    <time datetime="P61D">61 days</time>
+
+
+Create a countdown from a [valid global date and time](https://html.spec.whatwg.org/multipage/infrastructure.html#valid-global-date-and-time-string) string (with time-zone offset).
+
+    <div>2012-12-08T17:47:00+0100</div><!-- Paris (winter) -->
+    <div>2012-12-08T08:47:00-0800</div><!-- California -->
+    <div>2012-12-08T16:47:00+0000</div><!-- UTC -->
+
+
+Create a countdown from a [valid time](https://html.spec.whatwg.org/multipage/infrastructure.html#valid-time-string) string.
+
+    <div>12:30</div>
+    <div>12:30:39</div>
+    <div>12:30:39.929</div>
+
+
+Create a countdown from a [valid duration](https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string) string.
+
+   <div>P2D</div>
+   <div>PT01H01M15S</div>
+   <div>PT20M20S</div>
+   <div>PT10S</div>
+
+
+Create a countdown from a string representation of a Python `timedelta` object.
+
+    <div>600 days, 3:59:12</div>
+    <div>00:59:00</div>
+    <div>3:59:12</div>
+
+
+Create a countdown from a human readable duration string.
+
+    <h1>24h00m59s</h1>
+    <h1>2h 0m</h1>
+    <h1>4h 18m 3s</h1>
+    <h1>600 days, 3:59:12</h1>
+    <h1>600 jours, 3:59:12</h1>
+    <h1>00:01</h1>
+    <h1>240:00:59</h1>
+
+
+Create a countdown from a JavaScript `Date.parse()` compliant string.
+
+    <div><script>document.write(date.toDateString())</script></div>
+    <div><script>document.write(date.toGMTString())</script></div>
+    <div><script>document.write(date.toISOString())</script></div>
+    <div><script>document.write(date.toUTCString())</script></div>
+
+
+## Rock'n'roll
+
+    $('div, h1, time').countDown();
+
+
+## Available options
+
+- `css_class`: the css class of the generated `<time>` tag (default: `countdown`).
+- `always_show_days`: always display days if true even if none remains (default: `false`).
+- `with_labels`: display or hide labels (default: `true`).
+- `with_seconds`: display or hide seconds (default: `true`).
+- `with_separators`: display or hide separators between days, hours, minutes and seconds (default: `true`).
+- `label_dd`: label's text for days (default: `days`).
+- `label_hh`: label's text for hours (default: `hours`).
+- `label_mm`: label's text for minutes (default: `minutes`).
+- `label_ss`: label's text for seconds (default: `seconds`).
+- `separator`: separator character between hours, minutes and seconds (default: `:`).
+- `separator_days`: separator character between days and hours (default: `,`).
+
+
+## Events
+
+`time.elapsed`: this event fires immediately when the time is elapsed.
+
+    $('#my-countdown').on('time.elapsed', function () {
+        // do something...
+    });
+
+
+## Generated markup
+
+A valid `<time>` tag representing a duration is generated.
+
+    <time class="countdown" datetime="P12DT05H16M22S">
+        <span class="item item-dd">
+            <span class="dd"></span>
+            <span class="label label-dd">days</span>
+        </span>
+        <span class="separator separator-dd">,</span>
+        <span class="item item-hh">
+            <span class="hh-1"></span>
+            <span class="hh-2"></span>
+            <span class="label label-hh">hours</span>
+        </span>
+        <span class="separator">:</span>
+        <span class="item item-mm">
+            <span class="mm-1"></span>
+            <span class="mm-2"></span>
+            <span class="label label-mm">minutes</span>
+        </span>
+        <span class="separator">:</span>
+        <span class="item item-ss">
+            <span class="ss-1"></span>
+            <span class="ss-2"></span>
+            <span class="label label-ss">seconds</span>
+        </span>
+    </time>
+
+
+## Acknowledgements
+
+Released under the [MIT License](http://opensource.org/licenses/mit-license).
+
+Issues should be opened through [GitHub Issues](https://github.com/kemar/jquery.countdown/issues/).
+
+[jQuery Countdown](https://github.com/kemar/jquery.countdown) is authored and maintained by [Kemar](https://marcarea.com).
