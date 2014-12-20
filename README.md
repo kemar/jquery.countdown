@@ -19,7 +19,7 @@ Include this script after jQuery.
 
 ## Usage
 
-Create a countdown from a `<time>` tag `datetime` attribute (valid global date and time, time or duration).
+Create a countdown from the **value** of the `datetime` **attribute** of a `<time>` tag (valid global date and time, time or duration).
 
     <time datetime="2013-12-13T17:43:00">Friday, December 13th, 2013 5:43pm</time>
     <time datetime="02:30:30">Expires in 2 hours 30 minutes 30 seconds</time>
