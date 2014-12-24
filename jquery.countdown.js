@@ -101,17 +101,17 @@
 
     var pluginName = 'countDown';
     var defaults = {
-          css_class:        'countdown'
-        , always_show_days: false
-        , with_labels:      true
-        , with_seconds:     true
-        , with_separators:  true
-        , label_dd:         'days'
-        , label_hh:         'hours'
-        , label_mm:         'minutes'
-        , label_ss:         'seconds'
-        , separator:        ':'
-        , separator_days:   ','
+        css_class:        'countdown',
+        always_show_days: false,
+        with_labels:      true,
+        with_seconds:     true,
+        with_separators:  true,
+        label_dd:         'days',
+        label_hh:         'hours',
+        label_mm:         'minutes',
+        label_ss:         'seconds',
+        separator:        ':',
+        separator_days:   ','
     };
 
     function CountDown(element, options) {
@@ -147,49 +147,49 @@
             this.set_timeout_delay = this.sToMs(1);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
-        }
+        },
 
         // Convert seconds to milliseconds.
-        , sToMs: function (s) {
+        sToMs: function (s) {
             return parseInt(s, 10) * 1000;
-        }
+        },
 
         // Convert minutes to milliseconds.
-        , mToMs: function (m) {
+        mToMs: function (m) {
             return parseInt(m, 10) * 60 * 1000;
-        }
+        },
 
         // Convert hours to milliseconds.
-        , hToMs: function (h) {
+        hToMs: function (h) {
             return parseInt(h, 10) * 60 * 60 * 1000;
-        }
+        },
 
         // Convert days to milliseconds.
-        , dToMs: function (d) {
+        dToMs: function (d) {
             return parseInt(d, 10) * 24 * 60 * 60 * 1000;
-        }
+        },
 
         // Returns the seconds (0-59) of the specified timedelta expressed in milliseconds.
-        , msToS: function (ms) {
+        msToS: function (ms) {
             return parseInt((ms / 1000) % 60, 10);
-        }
+        },
 
         // Returns the minutes (0-59) of the specified timedelta expressed in milliseconds.
-        , msToM: function (ms) {
+        msToM: function (ms) {
             return parseInt((ms / 1000 / 60) % 60, 10);
-        }
+        },
 
         // Returns the hours (0-23) of the specified timedelta expressed in milliseconds.
-        , msToH: function (ms) {
+        msToH: function (ms) {
             return parseInt((ms / 1000 / 60 / 60) % 24, 10);
-        }
+        },
 
         // Returns the number of days of the specified timedelta expressed in milliseconds.
-        , msToD: function (ms) {
+        msToD: function (ms) {
             return parseInt((ms / 1000 / 60 / 60 / 24), 10);
-        }
+        },
 
-        , parseEndDate: function (str) {
+        parseEndDate: function (str) {
 
             var d, dd, hh, mm, ss, time_array;
 
@@ -328,9 +328,9 @@
                 return new Date(d);
             }
 
-        }
+        },
 
-        , markup: function () {
+        markup: function () {
             // Prepare the HTML content of the <time> element.
             var html = [];
             html.push(
@@ -381,9 +381,9 @@
             this.remaining_ss2 = this.time_element.find('.ss-2');
             // Set the css class of the <time> element.
             this.time_element.addClass(this.options.css_class);
-        }
+        },
 
-        , doCountDown: function () {
+        doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
             // Note: in iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
             // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
@@ -401,10 +401,10 @@
             }
             // Update display.
             this.displayRemainingTime({
-                  'ss': ss < 10 ? '0' + ss.toString() : ss.toString()
-                , 'mm': mm < 10 ? '0' + mm.toString() : mm.toString()
-                , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
-                , 'dd': dd.toString()
+                'ss': ss < 10 ? '0' + ss.toString() : ss.toString(),
+                'mm': mm < 10 ? '0' + mm.toString() : mm.toString(),
+                'hh': hh < 10 ? '0' + hh.toString() : hh.toString(),
+                'dd': dd.toString()
             });
             // If seconds are hidden, stop the counter as soon as there is no minute left.
             if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
@@ -417,12 +417,12 @@
             }
             // Reload it.
             var self = this;
-            setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
-        }
+            setTimeout(function () { self.doCountDown(); }, self.set_timeout_delay);
+        },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
         // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
-        , displayRemainingTime: function (remaining) {
+        displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
             // i.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
