@@ -149,6 +149,169 @@
             this.doCountDown();
         },
 
+        parseEndDate: function (str) {
+
+            var d;
+
+            d = this.parseDuration(str);
+            if (d instanceof Date) {
+                return d;
+            }
+
+            d = this.parseDateTime(str);
+            if (d instanceof Date) {
+                return d;
+            }
+
+            d = this.parseHumanReadableDuration(str);
+            if (d instanceof Date) {
+                return d;
+            }
+
+            // Try to parse a string representation of a date, and returns the number of milliseconds
+            // since January 1, 1970, 00:00:00 UTC.
+            // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
+            // new Date(d).toDateString() => Sat Dec 20 2014
+            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
+            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
+            d = Date.parse(str);
+            if (!isNaN(d)) {
+                return new Date(d);
+            }
+
+        },
+
+        // Convert a valid duration string representing a duration to a Date object.
+        // Limited to days, hours, minutes and seconds.
+        //
+        // http://goo.gl/42f8a
+        // http://en.wikipedia.org/wiki/ISO_8601#Durations
+        // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
+        //
+        // RegExp:
+        // /^
+        //     P            => duration designator (historically called "period")
+        //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
+        //     T?           => the letter "T" that precedes the time components of the representation (optional)
+        //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
+        //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
+        //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
+        // $/
+        parseDuration: function (str) {
+            var d, dd, hh, mm, ss, timeArray;
+            timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            if (timeArray) {
+                d = new Date();
+                dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
+                hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
+                mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
+                ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
+                d.setTime(d.getTime() + dd + hh + mm + ss);
+                return d;
+            }
+        },
+
+        // Convert a valid global date and time string representing a date, time, and a time-zone offset
+        // to a Date object.
+        // http://goo.gl/bwpxr
+        //
+        // 2012-12-08T13:30:39+0100
+        //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", undefined, "+0100"]
+        // 2012-12-08T06:54-0800
+        //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, undefined, "-0800"]
+        // 2012-12-08 13:30Z
+        //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, undefined, "Z"]
+        // 2013-12-08 06:54:39.929-10:30
+        //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "929", "-10:30"]
+        //
+        // RegExp:
+        // ^
+        //     (\d{4,})         => (year) (four or more ASCII digits)
+        //     -                => hyphen-minus
+        //     (\d{2})          => (month)
+        //     -                => hyphen-minus
+        //     (\d{2})          => (day)
+        //     [T\s]            => T or space
+        //     (\d{2})          => (hours)
+        //     :                => colon
+        //     (\d{2})          => (minutes)
+        //     (?:\:(\d{2}))?   => colon and (seconds) (optional)
+        //     (?:\.(\d{1,3}))? => full stop character (.) and fractional part of second (milliseconds) (optional)
+        //     ([Z\+\-\:\d]+)?  => time-zone (offset) string http://goo.gl/CJHLr (optional)
+        // $
+        parseDateTime: function (str) {
+            var d, timeArray;
+            timeArray = str.match(
+                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
+            if (timeArray) {
+                // Convert UTC offset from string to milliseconds.
+                // +0100 = ["+0100", "+", "01", "00"]
+                // -08:00 = ["-08:00", "-", "08", "00"]
+                // -10:30 = ["-10:30", "-", "10", "30"]
+                var offset = timeArray[8] ? timeArray[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
+                var ms_offset = 0;
+                if (offset) {
+                    ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
+                    ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
+                }
+                // A Date object set to the current local date and time.
+                d = new Date();
+                // Sets date and time according to universal time based on the values of timeArray.
+                d.setUTCHours(timeArray[4] || 0);
+                d.setUTCMinutes(timeArray[5] || 0);
+                d.setUTCSeconds(timeArray[6] || 0);
+                d.setUTCMilliseconds(timeArray[7] || 0);
+                d.setUTCDate(timeArray[3]);
+                d.setUTCMonth(timeArray[2] - 1);
+                d.setUTCFullYear(timeArray[1]);
+                // Add the UTC offset if any.
+                d.setTime(d.getTime() + ms_offset);
+                // Add the time-zone offset for the current locale if necessary.
+                var local_offset = this.mToMs(new Date().getTimezoneOffset());
+                if (local_offset !== ms_offset) {
+                    d.setTime(d.getTime() + local_offset);
+                }
+                return d;
+            }
+        },
+
+        // Try to parse a string representing a human readable duration.
+        // Limited to days, hours, minutes and seconds.
+        //
+        // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
+        //           3:59:12 => ["3:59:12", undefined, "3", "59", "12"]
+        //             00:01 => ["00:01", undefined, "00", "01", undefined]
+        //          00:00:59 => ["00:00:59", undefined, "00", "00", "59"]
+        //         240:00:59 => ["240:00:59", undefined, "240", "00", "59"]
+        //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3"]
+        //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59"]
+        //             2h 0m => ["2h 0m", undefined, "2", "0", undefined]
+        //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59"]
+        //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39"]
+        //
+        // RegExp:
+        // /^
+        //     (?:(\d+).+\s)?   => (days) followed by any character 0 or more times and a space (optional)
+        //     (\d+)[h:]\s?     => (hours) followed by "h" or ":" and an optional space
+        //     (\d+)[m:]?\s?    => (minutes) followed by "m" or ":" and an optional space
+        //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
+        //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
+        // $/
+        parseHumanReadableDuration: function (str) {
+            var d, dd, hh, mm, ss, timeArray;
+            timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
+            if (timeArray) {
+                d = new Date();
+                dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
+                hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
+                mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
+                ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
+                d.setTime(d.getTime() + dd + hh + mm + ss);
+                return d;
+            }
+        },
+
         // Convert seconds to milliseconds.
         sToMs: function (s) {
             return parseInt(s, 10) * 1000;
@@ -187,147 +350,6 @@
         // Returns the number of days of the specified timedelta expressed in milliseconds.
         msToD: function (ms) {
             return parseInt((ms / 1000 / 60 / 60 / 24), 10);
-        },
-
-        parseEndDate: function (str) {
-
-            var d, dd, hh, mm, ss, time_array;
-
-            // Try to parse a valid duration string representing a duration.
-            // Limited to days, hours, minutes and seconds.
-            //
-            // http://goo.gl/42f8a
-            // http://en.wikipedia.org/wiki/ISO_8601#Durations
-            // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
-            //
-            // RegExp:
-            // /^
-            //     P            => duration designator (historically called "period")
-            //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
-            //     T?           => the letter "T" that precedes the time components of the representation (optional)
-            //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
-            //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
-            //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
-            // $/
-            time_array = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
-            if (time_array) {
-                 d = new Date();
-                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
-                return d;
-            }
-
-            // Try to parse a valid global date and time string representing a date, time, and a time-zone offset.
-            // http://goo.gl/bwpxr
-            //
-            // 2012-12-08T13:30:39+0100
-            //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", undefined, "+0100"]
-            // 2012-12-08T06:54-0800
-            //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, undefined, "-0800"]
-            // 2012-12-08 13:30Z
-            //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, undefined, "Z"]
-            // 2013-12-08 06:54:39.929-10:30
-            //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "929", "-10:30"]
-            //
-            // RegExp:
-            // ^
-            //     (\d{4,})         => (year) (four or more ASCII digits)
-            //     -                => hyphen-minus
-            //     (\d{2})          => (month)
-            //     -                => hyphen-minus
-            //     (\d{2})          => (day)
-            //     [T\s]            => T or space
-            //     (\d{2})          => (hours)
-            //     :                => colon
-            //     (\d{2})          => (minutes)
-            //     (?:\:(\d{2}))?   => colon and (seconds) (optional)
-            //     (?:\.(\d{1,3}))? => full stop character (.) and fractional part of second (milliseconds) (optional)
-            //     ([Z\+\-\:\d]+)?  => time-zone (offset) string http://goo.gl/CJHLr (optional)
-            // $
-            time_array = str.match(
-                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
-            if (time_array) {
-                // Convert UTC offset from string to milliseconds.
-                // +0100 = ["+0100", "+", "01", "00"]
-                // -08:00 = ["-08:00", "-", "08", "00"]
-                // -10:30 = ["-10:30", "-", "10", "30"]
-                var offset = time_array[8] ? time_array[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
-                var ms_offset = 0;
-                if (offset) {
-                    ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
-                    ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
-                }
-
-                // A Date object set to the current local date and time.
-                var now = new Date();
-
-                // Sets date and time according to universal time based on the values of time_array.
-                now.setUTCHours(time_array[4] || 0);
-                now.setUTCMinutes(time_array[5] || 0);
-                now.setUTCSeconds(time_array[6] || 0);
-                now.setUTCMilliseconds(time_array[7] || 0);
-                now.setUTCDate(time_array[3]);
-                now.setUTCMonth(time_array[2] - 1);
-                now.setUTCFullYear(time_array[1]);
-
-                // Add the UTC offset if any.
-                now.setTime(now.getTime() + ms_offset);
-
-                // Add the time-zone offset for the current locale if necessary.
-                var local_offset = this.mToMs(new Date().getTimezoneOffset());
-                if (local_offset !== ms_offset) {
-                    now.setTime(now.getTime() + local_offset);
-                }
-
-                return now;
-            }
-
-            // Try to parse a string representing a human readable duration.
-            // Limited to days, hours, minutes and seconds.
-            //
-            // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
-            //           3:59:12 => ["3:59:12", undefined, "3", "59", "12"]
-            //             00:01 => ["00:01", undefined, "00", "01", undefined]
-            //          00:00:59 => ["00:00:59", undefined, "00", "00", "59"]
-            //         240:00:59 => ["240:00:59", undefined, "240", "00", "59"]
-            //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3"]
-            //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59"]
-            //             2h 0m => ["2h 0m", undefined, "2", "0", undefined]
-            //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59"]
-            //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39"]
-            //
-            // RegExp:
-            // /^
-            //     (?:(\d+).+\s)?   => (days) followed by any character 0 or more times and a space (optional)
-            //     (\d+)[h:]\s?     => (hours) followed by "h" or ":" and an optional space
-            //     (\d+)[m:]?\s?    => (minutes) followed by "m" or ":" and an optional space
-            //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
-            //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
-            // $/
-            time_array = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
-            if (time_array) {
-                d = new Date();
-                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
-                return d;
-            }
-
-            // Fallback solution: try to parse a date/time string.
-            // new Date(d).toDateString() => Sat Dec 20 2014
-            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
-            d = Date.parse(str);
-            if (!isNaN(d)) {
-                return new Date(d);
-            }
-
         },
 
         markup: function () {
