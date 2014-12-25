@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2
+ * jQuery Countdown - v1.2.2
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -38,7 +38,6 @@
      *          PT00M10S
      *          PT01H01M15S
      *          P2DT20H00M10S
-     *          PT00M10S
      *      - the output of a JavaScript Date.parse() parsable string:
      *          Date.toDateString() => Sat Dec 20 2014
      *          Date.toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
@@ -59,7 +58,7 @@
      *
      * Literature, resources and inspiration:
      *      JavaScript Date reference:
-     *          https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date
+     *          https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Date
      *      About the <time> element:
      *          http://www.w3.org/TR/html5/the-time-element.html#the-time-element (Working Draft)
      *          http://wiki.whatwg.org/wiki/Time_element
@@ -70,7 +69,9 @@
      *      Formats:
      *          http://en.wikipedia.org/wiki/ISO_8601
      *      jQuery plugin syntax:
-     *          https://github.com/zenorocha/jquery-plugin-patterns
+     *          https://github.com/jquery-boilerplate/jquery-patterns
+     *          https://github.com/jquery-boilerplate/jquery-boilerplate/wiki/Extending-jQuery-Boilerplate
+     *          http://frederictonug.net/jquery-plugin-development-with-the-jquery-boilerplate
      *
      * Example of generated HTML markup:
      *      <time class="countdown" datetime="P12DT05H16M22S">
@@ -100,18 +101,19 @@
     */
 
     var pluginName = 'countDown';
+
     var defaults = {
-          css_class:        'countdown'
-        , always_show_days: false
-        , with_labels:      true
-        , with_seconds:     true
-        , with_separators:  true
-        , label_dd:         'days'
-        , label_hh:         'hours'
-        , label_mm:         'minutes'
-        , label_ss:         'seconds'
-        , separator:        ':'
-        , separator_days:   ','
+        css_class:        'countdown',
+        always_show_days: false,
+        with_labels:      true,
+        with_seconds:     true,
+        with_separators:  true,
+        label_dd:         'days',
+        label_hh:         'hours',
+        label_mm:         'minutes',
+        label_ss:         'seconds',
+        separator:        ':',
+        separator_days:   ','
     };
 
     function CountDown(element, options) {
@@ -122,7 +124,7 @@
         this.init();
     }
 
-    CountDown.prototype = {
+    $.extend(CountDown.prototype, {
 
         init: function () {
             if (this.element.children().length) {
@@ -147,190 +149,214 @@
             this.set_timeout_delay = this.sToMs(1);
             this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
-        }
+        },
 
-        // Convert seconds to milliseconds.
-        , sToMs: function (s) {
-            return parseInt(s, 10) * 1000;
-        }
+        parseEndDate: function (str) {
 
-        // Convert minutes to milliseconds.
-        , mToMs: function (m) {
-            return parseInt(m, 10) * 60 * 1000;
-        }
+            var d;
 
-        // Convert hours to milliseconds.
-        , hToMs: function (h) {
-            return parseInt(h, 10) * 60 * 60 * 1000;
-        }
-
-        // Convert days to milliseconds.
-        , dToMs: function (d) {
-            return parseInt(d, 10) * 24 * 60 * 60 * 1000;
-        }
-
-        // Returns the seconds (0-59) of the specified timedelta expressed in milliseconds.
-        , msToS: function (ms) {
-            return parseInt((ms / 1000) % 60, 10);
-        }
-
-        // Returns the minutes (0-59) of the specified timedelta expressed in milliseconds.
-        , msToM: function (ms) {
-            return parseInt((ms / 1000 / 60) % 60, 10);
-        }
-
-        // Returns the hours (0-23) of the specified timedelta expressed in milliseconds.
-        , msToH: function (ms) {
-            return parseInt((ms / 1000 / 60 / 60) % 24, 10);
-        }
-
-        // Returns the number of days of the specified timedelta expressed in milliseconds.
-        , msToD: function (ms) {
-            return parseInt((ms / 1000 / 60 / 60 / 24), 10);
-        }
-
-        , parseEndDate: function (str) {
-
-            var d, dd, hh, mm, ss, time_array;
-
-            // Try to parse a valid duration string representing a duration.
-            // Limited to days, hours, minutes and seconds.
-            //
-            // http://goo.gl/42f8a
-            // http://en.wikipedia.org/wiki/ISO_8601#Durations
-            // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
-            //
-            // RegExp:
-            // /^
-            //     P            => duration designator (historically called "period")
-            //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
-            //     T?           => the letter "T" that precedes the time components of the representation (optional)
-            //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
-            //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
-            //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
-            // $/
-            time_array = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
-            if (time_array) {
-                 d = new Date();
-                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
+            d = this.parseDuration(str);
+            if (d instanceof Date) {
                 return d;
             }
 
-            // Try to parse a valid global date and time string representing a date, time, and a time-zone offset.
-            // http://goo.gl/bwpxr
-            //
-            // 2012-12-08T13:30:39+0100
-            //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", "+0100"]
-            // 2012-12-08T06:54-0800
-            //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, "-0800"]
-            // 2012-12-08 13:30Z
-            //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, "Z"]
-            // 2013-12-08 06:54:39.929-10:30
-            //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "-10:30"]
-            //
-            // RegExp:
-            // ^
-            //     (\d{4,})         => (year) (four or more ASCII digits)
-            //     -                => hyphen-minus
-            //     (\d{2})          => (month)
-            //     -                => hyphen-minus
-            //     (\d{2})          => (day)
-            //     [T\s]            => T or space
-            //     (\d{2})          => (hours)
-            //     :                => colon
-            //     (\d{2})          => (minutes)
-            //     (?:\:(\d{2}))?    => colon and seconds (optional)
-            //     (?:\.(\d{1,3}))?   => full stop character (.) and fractional part of second (optional)
-            //     ([Z\+\-\:\d]+)?  => time-zone offset string http://goo.gl/CJHLr (optional)
-            // $
-            time_array = str.match(
-                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
-            if (time_array) {
-                // Convert UTC offset from string to milliseconds.
-                // +0100 = ["+0100", "+", "01", "00"]
-                // -08:00 = ["-08:00", "-", "08", "00"]
-                // -10:30 = ["-10:30", "-", "10", "30"]
-                var offset = time_array[8] ? time_array[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
-                var ms_offset = 0;
-                if (offset) {
-                    ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
-                    ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
-                }
-
-                // A Date object set to the current local date and time.
-                var now = new Date();
-
-                // Sets date and time according to universal time based on the values of time_array.
-                now.setUTCHours(time_array[4] || 0);
-                now.setUTCMinutes(time_array[5] || 0);
-                now.setUTCSeconds(time_array[6] || 0);
-                now.setUTCMilliseconds(time_array[7] || 0);
-                now.setUTCDate(time_array[3]);
-                now.setUTCMonth(time_array[2] - 1);
-                now.setUTCFullYear(time_array[1]);
-
-                // Add the UTC offset if any.
-                now.setTime(now.getTime() + ms_offset);
-
-                // Add the time-zone offset for the current locale if necessary.
-                var local_offset = this.mToMs(new Date().getTimezoneOffset());
-                if (local_offset !== ms_offset) {
-                    now.setTime(now.getTime() + local_offset);
-                }
-
-                return now;
-            }
-
-            // Try to parse a string representing a human readable duration.
-            // Limited to days, hours, minutes and seconds.
-            //
-            // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
-            //           3:59:12 => ["3:59:12", undefined, "3", "59", "12"]
-            //             00:01 => ["00:01", undefined, "00", "01", undefined]
-            //          00:00:59 => ["00:00:59", undefined, "00", "00", "59"]
-            //         240:00:59 => ["240:00:59", undefined, "240", "00", "59"]
-            //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3"]
-            //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59"]
-            //             2h 0m => ["2h 0m", undefined, "2", "0", undefined]
-            //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59"]
-            //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39"]
-            //
-            // RegExp:
-            // /^
-            //     (?:(\d+).+\s)?   => (days) followed by any character 0 or more times and a space (optional)
-            //     (\d+)[h:]\s?     => (hours) followed by "h" or ":" and an optional space
-            //     (\d+)[m:]?\s?    => (minutes) followed by "m" or ":" and an optional space
-            //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
-            //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
-            // $/
-            time_array = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
-            if (time_array) {
-                d = new Date();
-                dd = time_array[1] ? this.dToMs(time_array[1]) : 0;
-                hh = time_array[2] ? this.hToMs(time_array[2]) : 0;
-                mm = time_array[3] ? this.mToMs(time_array[3]) : 0;
-                ss = time_array[4] ? this.sToMs(time_array[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
+            d = this.parseDateTime(str);
+            if (d instanceof Date) {
                 return d;
             }
 
-            // Fallback solution: try to parse a date/time string.
+            d = this.parseHumanReadableDuration(str);
+            if (d instanceof Date) {
+                return d;
+            }
+
+            // Try to parse a string representation of a date, and returns the number of milliseconds
+            // since January 1, 1970, 00:00:00 UTC.
+            // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
             // new Date(d).toDateString() => Sat Dec 20 2014
             // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
             // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
             d = Date.parse(str);
             if (!isNaN(d)) {
                 return new Date(d);
             }
 
-        }
+        },
 
-        , markup: function () {
+        // Convert a valid duration string representing a duration to a Date object.
+        // Limited to days, hours, minutes and seconds.
+        //
+        // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string
+        // http://en.wikipedia.org/wiki/ISO_8601#Durations
+        // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
+        //
+        // RegExp:
+        // /^
+        //     P            => duration designator (historically called "period")
+        //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
+        //     T?           => the letter "T" that precedes the time components of the representation (optional)
+        //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
+        //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
+        //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
+        // $/
+        parseDuration: function (str) {
+            var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            if (timeArray) {
+                var d, dd, hh, mm, ss;
+                d = new Date();
+                dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
+                hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
+                mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
+                ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
+                d.setTime(d.getTime() + dd + hh + mm + ss);
+                return d;
+            }
+        },
+
+        // Convert a valid global date and time string representing a date, time, and a time-zone offset
+        // to a Date object.
+        // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-global-date-and-time-string
+        //
+        // 2012-12-08T13:30:39+0100
+        //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", undefined, "+0100"]
+        // 2012-12-08T06:54-0800
+        //     => ["2012-12-08T06:54-0800", "2012", "12", "08", "06", "54", undefined, undefined, "-0800"]
+        // 2012-12-08 13:30Z
+        //     => ["2012-12-08 13:30Z", "2012", "12", "08", "13", "30", undefined, undefined, "Z"]
+        // 2013-12-08 06:54:39.929-10:30
+        //     => ["2013-12-08 06:54:39.929-08:30", "2013", "12", "08", "06", "54", "39", "929", "-10:30"]
+        //
+        // RegExp:
+        // ^
+        //     (\d{4,})         => (year) (four or more ASCII digits)
+        //     -                => hyphen-minus
+        //     (\d{2})          => (month)
+        //     -                => hyphen-minus
+        //     (\d{2})          => (day)
+        //     [T\s]            => T or space
+        //     (\d{2})          => (hours)
+        //     :                => colon
+        //     (\d{2})          => (minutes)
+        //     (?:\:(\d{2}))?   => colon and (seconds) (optional)
+        //     (?:\.(\d{1,3}))? => full stop character (.) and fractional part of second (milliseconds) (optional)
+        //     ([Z\+\-\:\d]+)?  => time-zone (offset) string (optional)
+        // $
+        parseDateTime: function (str) {
+            var timeArray = str.match(
+                /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
+            if (timeArray) {
+
+                var d = new Date();
+                var local_utc_offset = this.mToMs(d.getTimezoneOffset());
+                var utc_offset = 0;
+
+                // Convert UTC offset from string to milliseconds.
+                // +0100 = ["+0100", "+", "01", "00"]
+                // -08:00 = ["-08:00", "-", "08", "00"]
+                // -10:30 = ["-10:30", "-", "10", "30"]
+                var offset = timeArray[8] ? timeArray[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
+                if (offset) {
+                    // Time-zone offset from UTC in milliseconds.
+                    // Mimics the result of Date.prototype.getTimezoneOffset().
+                    utc_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
+                    utc_offset = (offset[1] === '-') ? utc_offset : -utc_offset;
+                }
+
+                // Set date and time based on the values of timeArray (in the current locale time zone).
+                d.setHours(timeArray[4] || 0);
+                d.setMinutes(timeArray[5] || 0);
+                d.setSeconds(timeArray[6] || 0);
+                d.setMilliseconds(timeArray[7] || 0);
+                d.setDate(timeArray[3]);
+                d.setMonth(timeArray[2] - 1);
+                d.setFullYear(timeArray[1]);
+
+                if (local_utc_offset !== utc_offset) {
+                    d.setTime(d.getTime() + utc_offset - local_utc_offset);
+                }
+
+                return d;
+
+            }
+        },
+
+        // Convert a string representing a human readable duration to a Date object.
+        // Limited to days, hours, minutes and seconds.
+        //
+        // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
+        //           3:59:12 => ["3:59:12", undefined, "3", "59", "12"]
+        //             00:01 => ["00:01", undefined, "00", "01", undefined]
+        //          00:00:59 => ["00:00:59", undefined, "00", "00", "59"]
+        //         240:00:59 => ["240:00:59", undefined, "240", "00", "59"]
+        //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3"]
+        //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59"]
+        //             2h 0m => ["2h 0m", undefined, "2", "0", undefined]
+        //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59"]
+        //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39"]
+        //
+        // RegExp:
+        // /^
+        //     (?:(\d+).+\s)?   => (days) followed by any character 0 or more times and a space (optional)
+        //     (\d+)[h:]\s?     => (hours) followed by "h" or ":" and an optional space
+        //     (\d+)[m:]?\s?    => (minutes) followed by "m" or ":" and an optional space
+        //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
+        //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
+        // $/
+        parseHumanReadableDuration: function (str) {
+            var timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
+            if (timeArray) {
+                var d, dd, hh, mm, ss;
+                d = new Date();
+                dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
+                hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
+                mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
+                ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
+                d.setTime(d.getTime() + dd + hh + mm + ss);
+                return d;
+            }
+        },
+
+        // Convert seconds to milliseconds.
+        sToMs: function (s) {
+            return parseInt(s, 10) * 1000;
+        },
+
+        // Convert minutes to milliseconds.
+        mToMs: function (m) {
+            return parseInt(m, 10) * 60 * 1000;
+        },
+
+        // Convert hours to milliseconds.
+        hToMs: function (h) {
+            return parseInt(h, 10) * 60 * 60 * 1000;
+        },
+
+        // Convert days to milliseconds.
+        dToMs: function (d) {
+            return parseInt(d, 10) * 24 * 60 * 60 * 1000;
+        },
+
+        // Returns the seconds (0-59) of the specified timedelta expressed in milliseconds.
+        msToS: function (ms) {
+            return parseInt((ms / 1000) % 60, 10);
+        },
+
+        // Returns the minutes (0-59) of the specified timedelta expressed in milliseconds.
+        msToM: function (ms) {
+            return parseInt((ms / 1000 / 60) % 60, 10);
+        },
+
+        // Returns the hours (0-23) of the specified timedelta expressed in milliseconds.
+        msToH: function (ms) {
+            return parseInt((ms / 1000 / 60 / 60) % 24, 10);
+        },
+
+        // Returns the number of days of the specified timedelta expressed in milliseconds.
+        msToD: function (ms) {
+            return parseInt((ms / 1000 / 60 / 60 / 24), 10);
+        },
+
+        markup: function () {
             // Prepare the HTML content of the <time> element.
             var html = [];
             html.push(
@@ -381,9 +407,9 @@
             this.remaining_ss2 = this.time_element.find('.ss-2');
             // Set the css class of the <time> element.
             this.time_element.addClass(this.options.css_class);
-        }
+        },
 
-        , doCountDown: function () {
+        doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
             // Note: in iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
             // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
@@ -401,10 +427,10 @@
             }
             // Update display.
             this.displayRemainingTime({
-                  'ss': ss < 10 ? '0' + ss.toString() : ss.toString()
-                , 'mm': mm < 10 ? '0' + mm.toString() : mm.toString()
-                , 'hh': hh < 10 ? '0' + hh.toString() : hh.toString()
-                , 'dd': dd.toString()
+                'ss': ss < 10 ? '0' + ss.toString() : ss.toString(),
+                'mm': mm < 10 ? '0' + mm.toString() : mm.toString(),
+                'hh': hh < 10 ? '0' + hh.toString() : hh.toString(),
+                'dd': dd.toString()
             });
             // If seconds are hidden, stop the counter as soon as there is no minute left.
             if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
@@ -417,12 +443,12 @@
             }
             // Reload it.
             var self = this;
-            setTimeout(function () { self.doCountDown() }, self.set_timeout_delay);
-        }
+            window.setTimeout(function () { self.doCountDown(); }, self.set_timeout_delay);
+        },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
         // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
-        , displayRemainingTime: function (remaining) {
+        displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
             // i.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
@@ -451,9 +477,13 @@
             this.remaining_ss2.text(remaining.ss[1]);
         }
 
-    };
+    });
 
     $.fn[pluginName] = function (options) {
+
+        var args = arguments;
+
+        // If the first parameter is an object (options) or was omitted, instantiate a new plugin instance.
         if (options === undefined || typeof options === 'object') {
             return this.each(function () {
                 if (!$.data(this, 'plugin_' + pluginName)) {
@@ -461,6 +491,36 @@
                 }
             });
         }
+
+        // Allow any public function (i.e. a function whose name isn't 'init' or doesn't start with an underscore)
+        // to be called via the jQuery plugin, e.g. $(element).countDown('functionName', arg1, arg2).
+        else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+
+            // Cache the method call to make it possible to return a value.
+            var returns;
+
+            this.each(function () {
+                var instance = $.data(this, 'plugin_' + pluginName);
+
+                // Tests that there's already a plugin-instance and checks that the requested public method exists.
+                if (instance instanceof CountDown && typeof instance[options] === 'function') {
+                    // Call the method of our plugin instance, and pass it the supplied arguments.
+                    returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                }
+
+                // Allow instances to be destroyed via the 'destroy' method
+                if (options === 'destroy') {
+                    $.data(this, 'plugin_' + pluginName, null);
+                }
+
+            });
+
+            // If the earlier cached method gives a value back return the value,
+            // otherwise return this to preserve chainability.
+            return returns !== undefined ? returns : this;
+
+        }
+
     };
 
 })(window.jQuery, window, document);
