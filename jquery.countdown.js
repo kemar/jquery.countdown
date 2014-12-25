@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2.1
+ * jQuery Countdown - v1.2.2
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -176,7 +176,6 @@
             // new Date(d).toDateString() => Sat Dec 20 2014
             // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
             // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toISOString()  => 2014-12-20T09:24:00.000Z       => IE >= 9 http://goo.gl/P4F9u
             d = Date.parse(str);
             if (!isNaN(d)) {
                 return new Date(d);
