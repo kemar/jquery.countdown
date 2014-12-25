@@ -38,7 +38,6 @@
      *          PT00M10S
      *          PT01H01M15S
      *          P2DT20H00M10S
-     *          PT00M10S
      *      - the output of a JavaScript Date.parse() parsable string:
      *          Date.toDateString() => Sat Dec 20 2014
      *          Date.toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
@@ -59,7 +58,7 @@
      *
      * Literature, resources and inspiration:
      *      JavaScript Date reference:
-     *          https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date
+     *          https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Date
      *      About the <time> element:
      *          http://www.w3.org/TR/html5/the-time-element.html#the-time-element (Working Draft)
      *          http://wiki.whatwg.org/wiki/Time_element
@@ -70,7 +69,9 @@
      *      Formats:
      *          http://en.wikipedia.org/wiki/ISO_8601
      *      jQuery plugin syntax:
-     *          https://github.com/zenorocha/jquery-plugin-patterns
+     *          https://github.com/jquery-boilerplate/jquery-patterns
+     *          https://github.com/jquery-boilerplate/jquery-boilerplate/wiki/Extending-jQuery-Boilerplate
+     *          http://frederictonug.net/jquery-plugin-development-with-the-jquery-boilerplate
      *
      * Example of generated HTML markup:
      *      <time class="countdown" datetime="P12DT05H16M22S">
@@ -100,6 +101,7 @@
     */
 
     var pluginName = 'countDown';
+
     var defaults = {
         css_class:        'countdown',
         always_show_days: false,
@@ -122,7 +124,7 @@
         this.init();
     }
 
-    CountDown.prototype = {
+    $.extend(CountDown.prototype, {
 
         init: function () {
             if (this.element.children().length) {
@@ -185,7 +187,7 @@
         // Convert a valid duration string representing a duration to a Date object.
         // Limited to days, hours, minutes and seconds.
         //
-        // http://goo.gl/42f8a
+        // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string
         // http://en.wikipedia.org/wiki/ISO_8601#Durations
         // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
         //
@@ -214,7 +216,7 @@
 
         // Convert a valid global date and time string representing a date, time, and a time-zone offset
         // to a Date object.
-        // http://goo.gl/bwpxr
+        // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-global-date-and-time-string
         //
         // 2012-12-08T13:30:39+0100
         //     => ["2012-12-08T13:30:39+0100", "2012", "12", "08", "13", "30", "39", undefined, "+0100"]
@@ -238,7 +240,7 @@
         //     (\d{2})          => (minutes)
         //     (?:\:(\d{2}))?   => colon and (seconds) (optional)
         //     (?:\.(\d{1,3}))? => full stop character (.) and fractional part of second (milliseconds) (optional)
-        //     ([Z\+\-\:\d]+)?  => time-zone (offset) string http://goo.gl/CJHLr (optional)
+        //     ([Z\+\-\:\d]+)?  => time-zone (offset) string (optional)
         // $
         parseDateTime: function (str) {
             var d, timeArray;
@@ -439,7 +441,7 @@
             }
             // Reload it.
             var self = this;
-            setTimeout(function () { self.doCountDown(); }, self.set_timeout_delay);
+            window.setTimeout(function () { self.doCountDown(); }, self.set_timeout_delay);
         },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
@@ -473,7 +475,7 @@
             this.remaining_ss2.text(remaining.ss[1]);
         }
 
-    };
+    });
 
     $.fn[pluginName] = function (options) {
         if (options === undefined || typeof options === 'object') {
