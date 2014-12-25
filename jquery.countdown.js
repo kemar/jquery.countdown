@@ -201,9 +201,9 @@
         //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
         // $/
         parseDuration: function (str) {
-            var d, dd, hh, mm, ss, timeArray;
-            timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
             if (timeArray) {
+                var d, dd, hh, mm, ss;
                 d = new Date();
                 dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
                 hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
@@ -243,42 +243,45 @@
         //     ([Z\+\-\:\d]+)?  => time-zone (offset) string (optional)
         // $
         parseDateTime: function (str) {
-            var d, timeArray;
-            timeArray = str.match(
+            var timeArray = str.match(
                 /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
             if (timeArray) {
+
+                var d = new Date();
+                var local_utc_offset = this.mToMs(d.getTimezoneOffset());
+                var utc_offset = 0;
+
                 // Convert UTC offset from string to milliseconds.
                 // +0100 = ["+0100", "+", "01", "00"]
                 // -08:00 = ["-08:00", "-", "08", "00"]
                 // -10:30 = ["-10:30", "-", "10", "30"]
                 var offset = timeArray[8] ? timeArray[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
-                var ms_offset = 0;
                 if (offset) {
-                    ms_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
-                    ms_offset = (offset[1] === '+') ? -ms_offset : ms_offset;
+                    // Time-zone offset from UTC in milliseconds.
+                    // Mimics the result of Date.prototype.getTimezoneOffset().
+                    utc_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
+                    utc_offset = (offset[1] === '-') ? utc_offset : -utc_offset;
                 }
-                // A Date object set to the current local date and time.
-                d = new Date();
-                // Sets date and time according to universal time based on the values of timeArray.
-                d.setUTCHours(timeArray[4] || 0);
-                d.setUTCMinutes(timeArray[5] || 0);
-                d.setUTCSeconds(timeArray[6] || 0);
-                d.setUTCMilliseconds(timeArray[7] || 0);
-                d.setUTCDate(timeArray[3]);
-                d.setUTCMonth(timeArray[2] - 1);
-                d.setUTCFullYear(timeArray[1]);
-                // Add the UTC offset if any.
-                d.setTime(d.getTime() + ms_offset);
-                // Add the time-zone offset for the current locale if necessary.
-                var local_offset = this.mToMs(new Date().getTimezoneOffset());
-                if (local_offset !== ms_offset) {
-                    d.setTime(d.getTime() + local_offset);
+
+                // Set date and time based on the values of timeArray (in the current locale time zone).
+                d.setHours(timeArray[4] || 0);
+                d.setMinutes(timeArray[5] || 0);
+                d.setSeconds(timeArray[6] || 0);
+                d.setMilliseconds(timeArray[7] || 0);
+                d.setDate(timeArray[3]);
+                d.setMonth(timeArray[2] - 1);
+                d.setFullYear(timeArray[1]);
+
+                if (local_utc_offset !== utc_offset) {
+                    d.setTime(d.getTime() + utc_offset - local_utc_offset);
                 }
+
                 return d;
+
             }
         },
 
-        // Try to parse a string representing a human readable duration.
+        // Convert a string representing a human readable duration to a Date object.
         // Limited to days, hours, minutes and seconds.
         //
         // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
@@ -301,9 +304,9 @@
         //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
         // $/
         parseHumanReadableDuration: function (str) {
-            var d, dd, hh, mm, ss, timeArray;
-            timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
+            var timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
             if (timeArray) {
+                var d, dd, hh, mm, ss;
                 d = new Date();
                 dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
                 hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
