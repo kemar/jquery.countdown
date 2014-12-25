@@ -478,6 +478,10 @@
     });
 
     $.fn[pluginName] = function (options) {
+
+        var args = arguments;
+
+        // If the first parameter is an object (options) or was omitted, instantiate a new plugin instance.
         if (options === undefined || typeof options === 'object') {
             return this.each(function () {
                 if (!$.data(this, 'plugin_' + pluginName)) {
@@ -485,6 +489,36 @@
                 }
             });
         }
+
+        // Allow any public function (i.e. a function whose name isn't 'init' or doesn't start with an underscore)
+        // to be called via the jQuery plugin, e.g. $(element).countDown('functionName', arg1, arg2).
+        else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+
+            // Cache the method call to make it possible to return a value.
+            var returns;
+
+            this.each(function () {
+                var instance = $.data(this, 'plugin_' + pluginName);
+
+                // Tests that there's already a plugin-instance and checks that the requested public method exists.
+                if (instance instanceof CountDown && typeof instance[options] === 'function') {
+                    // Call the method of our plugin instance, and pass it the supplied arguments.
+                    returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                }
+
+                // Allow instances to be destroyed via the 'destroy' method
+                if (options === 'destroy') {
+                    $.data(this, 'plugin_' + pluginName, null);
+                }
+
+            });
+
+            // If the earlier cached method gives a value back return the value,
+            // otherwise return this to preserve chainability.
+            return returns !== undefined ? returns : this;
+
+        }
+
     };
 
 })(window.jQuery, window, document);
