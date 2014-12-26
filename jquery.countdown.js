@@ -130,23 +130,23 @@
                 return;
             }
             if (this.element.attr('datetime')) {  // Try to parse the datetime attribute first.
-                this.end_date = this.parseEndDate(this.element.attr('datetime'));
+                this.endDate = this.parseEndDate(this.element.attr('datetime'));
             }
-            if (this.end_date === undefined) {  // Fallback on the text content.
-                this.end_date = this.parseEndDate(this.element.text());
+            if (this.endDate === undefined) {  // Fallback on the text content.
+                this.endDate = this.parseEndDate(this.element.text());
             }
-            if (this.end_date === undefined) {  // Unable to parse a date.
+            if (this.endDate === undefined) {  // Unable to parse a date.
                 return;
             }
             if (this.element.is('time')) {
-                this.time_element = this.element;
+                this.timeElement = this.element;
             } else {
-                this.time_element = $('<time></time>');
-                this.element.html(this.time_element);
+                this.timeElement = $('<time></time>');
+                this.element.html(this.timeElement);
             }
             this.markup();
-            this.set_timeout_delay = this.sToMs(1);
-            this.time_element.bind('time.elapsed', this.options.onTimeElapsed);
+            this.setTimeoutDelay = this.sToMs(1);
+            this.timeElement.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
         },
 
@@ -382,39 +382,39 @@
                     '<span class="label label-ss">', this.options.label_ss, '</span>',
                 '</span>'
             );
-            this.time_element.html(html.join(''));
+            this.timeElement.html(html.join(''));
             // Customize HTML according to options.
             if (!this.options.with_labels) {
-                this.time_element.find('.label').remove();
+                this.timeElement.find('.label').remove();
             }
             if (!this.options.with_separators) {
-                this.time_element.find('.separator').remove();
+                this.timeElement.find('.separator').remove();
             }
             if (!this.options.with_seconds) {
-                this.time_element.find('.item-ss').remove();
-                this.time_element.find('.separator').last().remove();
+                this.timeElement.find('.item-ss').remove();
+                this.timeElement.find('.separator').last().remove();
             }
             // Cache elements.
-            this.item_dd       = this.time_element.find('.item-dd');
-            this.separator_dd  = this.time_element.find('.separator-dd');
-            this.remaining_dd  = this.time_element.find('.dd');
-            this.remaining_hh1 = this.time_element.find('.hh-1');
-            this.remaining_hh2 = this.time_element.find('.hh-2');
-            this.remaining_mm1 = this.time_element.find('.mm-1');
-            this.remaining_mm2 = this.time_element.find('.mm-2');
-            this.remaining_ss1 = this.time_element.find('.ss-1');
-            this.remaining_ss2 = this.time_element.find('.ss-2');
+            this.item_dd       = this.timeElement.find('.item-dd');
+            this.separator_dd  = this.timeElement.find('.separator-dd');
+            this.remaining_dd  = this.timeElement.find('.dd');
+            this.remaining_hh1 = this.timeElement.find('.hh-1');
+            this.remaining_hh2 = this.timeElement.find('.hh-2');
+            this.remaining_mm1 = this.timeElement.find('.mm-1');
+            this.remaining_mm2 = this.timeElement.find('.mm-2');
+            this.remaining_ss1 = this.timeElement.find('.ss-1');
+            this.remaining_ss2 = this.timeElement.find('.ss-2');
             // Set the css class of the <time> element.
-            this.time_element.addClass(this.options.css_class);
+            this.timeElement.addClass(this.options.css_class);
         },
 
         doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
-            // Note: in iOS JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
+            // Note: in old iOS, JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
             // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
-            // setTimeout() will always be executed after the specified `set_timeout_delay` which would have allowed us
-            // to call the doCountDown() function with (ms - this.set_timeout_delay) as argument.
-            var ms = this.end_date.getTime() - new Date().getTime();
+            // setTimeout() will always be executed after the specified `setTimeoutDelay` which would have allowed us
+            // to call the doCountDown() function with (ms - this.setTimeoutDelay) as argument.
+            var ms = this.endDate.getTime() - new Date().getTime();
             // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
             var mm = this.msToM(ms);
@@ -436,18 +436,18 @@
                 ss = 0;
             }
             if (dd === 0 && mm === 0 && hh === 0 && ss === 0) {
-                return this.time_element.trigger('time.elapsed');
+                return this.timeElement.trigger('time.elapsed');
             }
             // Reload it.
             var self = this;
-            window.setTimeout(function () { self.doCountDown(); }, self.set_timeout_delay);
+            window.setTimeout(function () { self.doCountDown(); }, self.setTimeoutDelay);
         },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
         // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
         displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#datetime-value
+            // https://html.spec.whatwg.org/multipage/semantics.html#datetime-value
             // i.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
             var attr = [];
             attr.push('P');
@@ -458,7 +458,7 @@
             if (this.options.with_seconds) {
                 attr.push(remaining.ss, 'S');
             }
-            this.time_element.attr('datetime', attr.join(''));
+            this.timeElement.attr('datetime', attr.join(''));
             // Hide days if necessary.
             if (!this.options.always_show_days && remaining.dd === '0') {
                 this.item_dd.hide();
