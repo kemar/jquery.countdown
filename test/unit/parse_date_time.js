@@ -43,7 +43,7 @@ QUnit.test("parseDateTime() with a colon character in the time-zone offset strin
 
     c = $('#countdown').countDown();
 
-    // 10-07-2015 10:18 - Paris UTC+2 (during Daylight Saving Time), assuming CEST - Central European Time.
+    // 10-07-2015 10:18 - Paris UTC+2 (during Daylight Saving Time), assuming CEST - Central European Summer Time.
     expected = new Date(2015, 7 - 1, 10, 10, 18, 59);
 
     // 10-07-2015 08:18 - UTC

@@ -1,7 +1,5 @@
 QUnit.test("parseDuration()", function (assert) {
 
-    // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string
-
     var c, duration, expected;
 
     c = $('#countdown').countDown();
