@@ -183,27 +183,32 @@
         //
         // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string
         // http://en.wikipedia.org/wiki/ISO_8601#Durations
-        // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D
+        // i.e.: P2DT20H00M10S, PT01H01M15S, PT00M10S, P2D, P2DT20H00M10.55S
         //
         // RegExp:
         // /^
-        //     P            => duration designator (historically called "period")
-        //     (?:(\d+)D)?  => (days) followed by the letter "D" (optional)
-        //     T?           => the letter "T" that precedes the time components of the representation (optional)
-        //     (?:(\d+)H)?  => (hours) followed by the letter "H" (optional)
-        //     (?:(\d+)M)?  => (minutes) followed by the letter "M" (optional)
-        //     (?:(\d+)S)?  => (seconds) followed by the letter "S" (optional)
+        //    P                     => duration designator (historically called "period")
+        //    (?:(\d+)D)?           => (days) followed by the letter "D" (optional)
+        //    T?                    => the letter "T" that precedes the time components of the representation (optional)
+        //    (?:(\d+)H)?           => (hours) followed by the letter "H" (optional)
+        //    (?:(\d+)M)?           => (minutes) followed by the letter "M" (optional)
+        //    (
+        //         ?:(\d+)          => (seconds) (optional)
+        //         (?:\.(\d{1,3}))  => (milliseconds) (optional)
+        //         ?S               => followed by the letter "S" (optional)
+        //    )?                    => (optional)
         // $/
         parseDuration: function (str) {
-            var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+            var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.(\d{1,3}))?S)?$/);
             if (timeArray) {
-                var d, dd, hh, mm, ss;
-                d = new Date();
+                var d, dd, hh, mm, ss, ms;
                 dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
                 hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
                 mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
                 ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
+                ms = timeArray[5] ? parseInt(timeArray[5], 10) : 0;
+                d = new Date();
+                d.setTime(d.getTime() + dd + hh + mm + ss + ms);
                 return d;
             }
         },
