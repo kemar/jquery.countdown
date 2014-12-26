@@ -26,6 +26,10 @@
      *          <h1>600 days, 3:59:12</h1>
      *
      *      The text representation of a date/time or duration can be:
+     *      - a valid duration string:
+     *          PT00M10S
+     *          PT01H01M15S
+     *          P2DT20H00M10S
      *      - a valid global date and time string with its timezone offset:
      *          2012-12-08T14:30:00.432+0100
      *          2012-12-08T05:30:00-0800
@@ -34,15 +38,6 @@
      *          12:30
      *          12:30:39
      *          12:30:39.929
-     *      - a valid duration string:
-     *          PT00M10S
-     *          PT01H01M15S
-     *          P2DT20H00M10S
-     *      - the output of a JavaScript Date.parse() parsable string:
-     *          Date.toDateString() => Sat Dec 20 2014
-     *          Date.toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
-     *          Date.toISOString()  => 2014-12-20T09:24:00.000Z
-     *          Date.toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
      *      - a human readable duration string:
      *          600 days, 3:59:12
      *          00:59:00
@@ -53,6 +48,10 @@
      *          600 jours, 3:59:12
      *          00:01
      *          240:00:59
+     *      - the output of a JavaScript Date.parse() parsable string:
+     *          Date.toDateString() => Sat Dec 20 2014
+     *          Date.toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
+     *          Date.toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
      *
      *      If $(element) is not a <time> tag, a new one is created and appended to $(element).
      *
@@ -60,9 +59,9 @@
      *      JavaScript Date reference:
      *          https://developer.mozilla.org/docs/JavaScript/Reference/Global_Objects/Date
      *      About the <time> element:
-     *          http://www.w3.org/TR/html5/the-time-element.html#the-time-element (Working Draft)
+     *          https://html.spec.whatwg.org/multipage/semantics.html#the-time-element
+     *          http://www.w3.org/TR/html5/text-level-semantics.html#the-time-element
      *          http://wiki.whatwg.org/wiki/Time_element
-     *          http://www.whatwg.org/specs/web-apps/current-work/multipage/text-level-semantics.html#the-time-element
      *      <time> history:
      *          http://www.brucelawson.co.uk/2012/best-of-time/
      *          http://www.webmonkey.com/2011/11/w3c-adds-time-element-back-to-html5/
@@ -170,12 +169,8 @@
                 return d;
             }
 
-            // Try to parse a string representation of a date, and returns the number of milliseconds
-            // since January 1, 1970, 00:00:00 UTC.
+            // Try to parse a string representation of a date.
             // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
-            // new Date(d).toDateString() => Sat Dec 20 2014
-            // new Date(d).toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
-            // new Date(d).toUTCString()  => Sat, 20 Dec 2014 09:24:00 GMT
             d = Date.parse(str);
             if (!isNaN(d)) {
                 return new Date(d);
@@ -213,8 +208,7 @@
             }
         },
 
-        // Convert a valid global date and time string representing a date, time, and a time-zone offset
-        // to a Date object.
+        // Convert a valid global date and time string to a Date object.
         // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-global-date-and-time-string
         //
         // 2012-12-08T13:30:39+0100
@@ -246,23 +240,21 @@
                 /^(\d{4,})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?:\:(\d{2}))?(?:\.(\d{1,3}))?([Z\+\-\:\d]+)?$/);
             if (timeArray) {
 
-                var d = new Date();
-                var local_utc_offset = this.mToMs(d.getTimezoneOffset());
-                var utc_offset = 0;
-
                 // Convert UTC offset from string to milliseconds.
-                // +0100 = ["+0100", "+", "01", "00"]
-                // -08:00 = ["-08:00", "-", "08", "00"]
-                // -10:30 = ["-10:30", "-", "10", "30"]
+                // +01:00 => ["+01:00", "+", "01", "00"] => -360000
+                // -08:00 => ["-08:00", "-", "08", "00"] => 28800000
+                // +05:30 => ["+05:30", "+", "05", "30"] => -19800000
                 var offset = timeArray[8] ? timeArray[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
+
+                // Difference, in milliseconds, between UTC and time based on the values of timeArray.
+                var utcOffset = 0;
                 if (offset) {
-                    // Time-zone offset from UTC in milliseconds.
-                    // Mimics the result of Date.prototype.getTimezoneOffset().
-                    utc_offset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
-                    utc_offset = (offset[1] === '-') ? utc_offset : -utc_offset;
+                    utcOffset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
+                    utcOffset = (offset[1] === '-') ? utcOffset : -utcOffset;
                 }
 
                 // Set date and time based on the values of timeArray (in the current locale time zone).
+                var d = new Date();
                 d.setHours(timeArray[4] || 0);
                 d.setMinutes(timeArray[5] || 0);
                 d.setSeconds(timeArray[6] || 0);
@@ -271,8 +263,12 @@
                 d.setMonth(timeArray[2] - 1);
                 d.setFullYear(timeArray[1]);
 
-                if (local_utc_offset !== utc_offset) {
-                    d.setTime(d.getTime() + utc_offset - local_utc_offset);
+                // Difference, in milliseconds, between UTC and the time based on the values of timeArray.
+                var localUtcOffset = this.mToMs(d.getTimezoneOffset());
+
+                if (localUtcOffset !== utcOffset) {
+                    var utcTime = d.getTime();
+                    d.setTime(utcTime + utcOffset - localUtcOffset);
                 }
 
                 return d;
@@ -434,12 +430,10 @@
             });
             // If seconds are hidden, stop the counter as soon as there is no minute left.
             if (!this.options.with_seconds && dd === 0 && mm === 0 && hh === 0) {
-                this.time_element.trigger('time.elapsed');
-                return;
+                ss = 0;
             }
             if (dd === 0 && mm === 0 && hh === 0 && ss === 0) {
-                this.time_element.trigger('time.elapsed');
-                return;
+                return this.time_element.trigger('time.elapsed');
             }
             // Reload it.
             var self = this;
