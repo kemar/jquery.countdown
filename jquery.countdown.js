@@ -253,24 +253,17 @@
                     utcOffset = (offset[1] === '-') ? utcOffset : -utcOffset;
                 }
 
-                // Set date and time based on the values of timeArray (in local time, i.e. the time known
-                // to the computer where JavaScript is executed).
-                var d = new Date();
-                d.setHours(timeArray[4] || 0);
-                d.setMinutes(timeArray[5] || 0);
-                d.setSeconds(timeArray[6] || 0);
-                d.setMilliseconds(timeArray[7] || 0);
-                d.setDate(timeArray[3]);
-                d.setMonth(timeArray[2] - 1);
-                d.setFullYear(timeArray[1]);
+                var d, yy, mo, dd, hh, mm, ss, ms;
+                yy = timeArray[1];
+                mo = timeArray[2] - 1;
+                dd = timeArray[3];
+                hh = timeArray[4] || 0;
+                mm = timeArray[5] || 0;
+                ss = timeArray[6] || 0;
+                ms = timeArray[7] || 0;
+                d = new Date(Date.UTC(yy, mo, dd, hh, mm, ss, ms));
 
-                // Time difference between UTC and the local time in milliseconds.
-                var localUtcOffset = this.mToMs(d.getTimezoneOffset());
-
-                if (localUtcOffset !== utcOffset) {
-                    var utcTime = d.getTime();
-                    d.setTime(utcTime + utcOffset - localUtcOffset);
-                }
+                d.setTime(d.getTime() + utcOffset);
 
                 return d;
 
