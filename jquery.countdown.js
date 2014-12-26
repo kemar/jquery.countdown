@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2.3
+ * jQuery Countdown - v1.2.4
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -39,15 +39,11 @@
      *          12:30:39
      *          12:30:39.929
      *      - a human readable duration string:
-     *          600 days, 3:59:12
-     *          00:59:00
-     *          3:59:12
-     *          24h00m59s
      *          2h 0m
      *          4h 18m 3s
+     *          24h00m59s
      *          600 jours, 3:59:12
-     *          00:01
-     *          240:00:59
+     *          600 days, 3:59:12
      *      - the output of a JavaScript Date.parse() parsable string:
      *          Date.toDateString() => Sat Dec 20 2014
      *          Date.toGMTString()  => Sat, 20 Dec 2014 09:24:00 GMT
@@ -146,6 +142,7 @@
             }
             this.markup();
             this.setTimeoutDelay = this.sToMs(1);
+            this.daysVisible = true;
             this.timeElement.bind('time.elapsed', this.options.onTimeElapsed);
             this.doCountDown();
         },
@@ -179,7 +176,6 @@
         },
 
         // Convert a valid duration string representing a duration to a Date object.
-        // Limited to days, hours, minutes and seconds.
         //
         // https://html.spec.whatwg.org/multipage/infrastructure.html#valid-duration-string
         // http://en.wikipedia.org/wiki/ISO_8601#Durations
@@ -276,8 +272,6 @@
         },
 
         // Convert a string representing a human readable duration to a Date object.
-        // Limited to days, hours, minutes and seconds.
-        //
         // Hours and minutes are mandatory.
         //
         // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12", undefined]
@@ -357,8 +351,7 @@
 
         markup: function () {
             // Prepare the HTML content of the <time> element.
-            var html = [];
-            html.push(
+            var html = [
                 '<span class="item item-dd">',
                     '<span class="dd"></span>',
                     '<span class="label label-dd">', this.options.label_dd, '</span>',
@@ -381,7 +374,7 @@
                     '<span class="ss-2"></span>',
                     '<span class="label label-ss">', this.options.label_ss, '</span>',
                 '</span>'
-            );
+            ];
             this.timeElement.html(html.join(''));
             // Customize HTML according to options.
             if (!this.options.with_labels) {
@@ -411,9 +404,7 @@
         doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
             // Note: in old iOS, JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
-            // Therefore we have to evaluate the remaining time with a new Date() object instead of assuming that
-            // setTimeout() will always be executed after the specified `setTimeoutDelay` which would have allowed us
-            // to call the doCountDown() function with (ms - this.setTimeoutDelay) as argument.
+            // Therefore we have to evaluate the remaining time with a new Date() object.
             var ms = this.endDate.getTime() - new Date().getTime();
             // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
@@ -460,9 +451,10 @@
             }
             this.timeElement.attr('datetime', attr.join(''));
             // Hide days if necessary.
-            if (!this.options.always_show_days && remaining.dd === '0') {
+            if (this.daysVisible && !this.options.always_show_days && remaining.dd === '0') {
                 this.item_dd.hide();
                 this.separator_dd.hide();
+                this.daysVisible = false;
             }
             // Update countdown values.
             this.remaining_dd.text(remaining.dd);
@@ -499,13 +491,13 @@
             this.each(function () {
                 var instance = $.data(this, 'plugin_' + pluginName);
 
-                // Tests that there's already a plugin-instance and checks that the requested public method exists.
+                // Tests that there's already a plugin instance and checks that the requested public method exists.
                 if (instance instanceof CountDown && typeof instance[options] === 'function') {
                     // Call the method of our plugin instance, and pass it the supplied arguments.
                     returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
                 }
 
-                // Allow instances to be destroyed via the 'destroy' method
+                // Allow instances to be destroyed via the 'destroy' method.
                 if (options === 'destroy') {
                     $.data(this, 'plugin_' + pluginName, null);
                 }
