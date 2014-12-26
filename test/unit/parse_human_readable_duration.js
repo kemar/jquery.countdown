@@ -104,7 +104,8 @@ QUnit.test("parseHumanReadableDuration()", function (assert) {
         new Date().getTime() +
         c.countDown('hToMs', 12) +
         c.countDown('mToMs', 30) +
-        c.countDown('sToMs', 39)
+        c.countDown('sToMs', 39) +
+        929
     );
     assert.equal(duration.toLocaleString(), expected.toLocaleString());
 

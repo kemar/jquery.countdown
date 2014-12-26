@@ -246,14 +246,15 @@
                 // +05:30 => ["+05:30", "+", "05", "30"] => -19800000
                 var offset = timeArray[8] ? timeArray[8].match(/^([\+\-])?(\d{2}):?(\d{2})$/) : undefined;
 
-                // Difference, in milliseconds, between UTC and time based on the values of timeArray.
+                // Time difference between UTC and the given time zone in milliseconds.
                 var utcOffset = 0;
                 if (offset) {
                     utcOffset = this.hToMs(offset[2]) + this.mToMs(offset[3]);
                     utcOffset = (offset[1] === '-') ? utcOffset : -utcOffset;
                 }
 
-                // Set date and time based on the values of timeArray (in the current locale time zone).
+                // Set date and time based on the values of timeArray (in local time, i.e. the time known
+                // to the computer where JavaScript is executed).
                 var d = new Date();
                 d.setHours(timeArray[4] || 0);
                 d.setMinutes(timeArray[5] || 0);
@@ -263,7 +264,7 @@
                 d.setMonth(timeArray[2] - 1);
                 d.setFullYear(timeArray[1]);
 
-                // Difference, in milliseconds, between UTC and the time based on the values of timeArray.
+                // Time difference between UTC and the local time in milliseconds.
                 var localUtcOffset = this.mToMs(d.getTimezoneOffset());
 
                 if (localUtcOffset !== utcOffset) {
@@ -279,16 +280,18 @@
         // Convert a string representing a human readable duration to a Date object.
         // Limited to days, hours, minutes and seconds.
         //
-        // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12"]
-        //           3:59:12 => ["3:59:12", undefined, "3", "59", "12"]
-        //             00:01 => ["00:01", undefined, "00", "01", undefined]
-        //          00:00:59 => ["00:00:59", undefined, "00", "00", "59"]
-        //         240:00:59 => ["240:00:59", undefined, "240", "00", "59"]
-        //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3"]
-        //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59"]
-        //             2h 0m => ["2h 0m", undefined, "2", "0", undefined]
-        //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59"]
-        //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39"]
+        // Hours and minutes are mandatory.
+        //
+        // 600 days, 3:59:12 => ["600 days, 3:59:12", "600", "3", "59", "12", undefined]
+        //           3:59:12 => ["3:59:12", undefined, "3", "59", "12", undefined]
+        //             00:01 => ["00:01", undefined, "00", "01", undefined, undefined]
+        //          00:00:59 => ["00:00:59", undefined, "00", "00", "59", undefined]
+        //         240:00:59 => ["240:00:59", undefined, "240", "00", "59", undefined]
+        //         4h 18m 3s => ["4h 18m 3s", undefined, "4", "18", "3", undefined]
+        //     1d 0h 00m 59s => ["1d 0h 00m 59s", "1", "0", "00", "59", undefined]
+        //             2h 0m => ["2h 0m", undefined, "2", "0", undefined, undefined]
+        //         24h00m59s => ["24h00m59s", undefined, "24", "00", "59", undefined]
+        //      12:30:39.929 => ["12:30:39.929", undefined, "12", "30", "39", "929"]
         //
         // RegExp:
         // /^
@@ -296,18 +299,19 @@
         //     (\d+)[h:]\s?     => (hours) followed by "h" or ":" and an optional space
         //     (\d+)[m:]?\s?    => (minutes) followed by "m" or ":" and an optional space
         //     (\d+)?[s]?       => (seconds) followed by an optional space (optional)
-        //     (?:\.\d{1,3})?   => full stop character (.) and fractional part of second (optional)
+        //     (?:\.(\d{1,3}))? => (milliseconds) full stop character (.) and fractional part of second (optional)
         // $/
         parseHumanReadableDuration: function (str) {
-            var timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.\d{1,3})?$/);
+            var timeArray = str.match(/^(?:(\d+).+\s)?(\d+)[h:]\s?(\d+)[m:]?\s?(\d+)?[s]?(?:\.(\d{1,3}))?$/);
             if (timeArray) {
-                var d, dd, hh, mm, ss;
+                var d, dd, hh, mm, ss, ms;
                 d = new Date();
                 dd = timeArray[1] ? this.dToMs(timeArray[1]) : 0;
                 hh = timeArray[2] ? this.hToMs(timeArray[2]) : 0;
                 mm = timeArray[3] ? this.mToMs(timeArray[3]) : 0;
                 ss = timeArray[4] ? this.sToMs(timeArray[4]) : 0;
-                d.setTime(d.getTime() + dd + hh + mm + ss);
+                ms = timeArray[5] ? parseInt(timeArray[5], 10) : 0;
+                d.setTime(d.getTime() + dd + hh + mm + ss + ms);
                 return d;
             }
         },
@@ -332,22 +336,23 @@
             return parseInt(d, 10) * 24 * 60 * 60 * 1000;
         },
 
-        // Returns the seconds (0-59) of the specified timedelta expressed in milliseconds.
+        // Extract seconds (0-59) from the given timedelta expressed in milliseconds.
+        // A timedelta represents a duration, the difference between two dates or times.
         msToS: function (ms) {
             return parseInt((ms / 1000) % 60, 10);
         },
 
-        // Returns the minutes (0-59) of the specified timedelta expressed in milliseconds.
+        // Extract minutes (0-59) from the given timedelta expressed in milliseconds.
         msToM: function (ms) {
             return parseInt((ms / 1000 / 60) % 60, 10);
         },
 
-        // Returns the hours (0-23) of the specified timedelta expressed in milliseconds.
+        // Extract hours (0-23) from the given timedelta expressed in milliseconds.
         msToH: function (ms) {
             return parseInt((ms / 1000 / 60 / 60) % 24, 10);
         },
 
-        // Returns the number of days of the specified timedelta expressed in milliseconds.
+        // Extract the number of days from the given timedelta expressed in milliseconds.
         msToD: function (ms) {
             return parseInt((ms / 1000 / 60 / 60 / 24), 10);
         },
