@@ -190,8 +190,8 @@
         //    (?:(\d+)M)?           => (minutes) followed by the letter "M" (optional)
         //    (
         //         ?:(\d+)          => (seconds) (optional)
-        //         (?:\.(\d{1,3}))  => (milliseconds) (optional)
-        //         ?S               => followed by the letter "S" (optional)
+        //         (?:\.(\d{1,3}))? => (milliseconds) full stop character (.) and fractional part of second (optional)
+        //         S                => followed by the letter "S" (optional)
         //    )?                    => (optional)
         // $/
         parseDuration: function (str) {
@@ -450,10 +450,10 @@
                 attr.push(remaining.ss, 'S');
             }
             this.timeElement.attr('datetime', attr.join(''));
-            // Hide days if necessary.
+            // Remove days if necessary.
             if (this.daysVisible && !this.options.always_show_days && remaining.dd === '0') {
-                this.item_dd.hide();
-                this.separator_dd.hide();
+                this.item_dd.remove();
+                this.separator_dd.remove();
                 this.daysVisible = false;
             }
             // Update countdown values.
