@@ -10,7 +10,13 @@ To use the countdown jQuery plugin you need an [up-to-date web browser supportin
 
 ## Installation
 
-Include this script after jQuery.
+Get the plugin from `npm`:
+
+```sh
+$ npm install jquery.countdown
+```
+
+Or include this script after jQuery.
 
 ```html
 <script src='jquery.js'></script>
