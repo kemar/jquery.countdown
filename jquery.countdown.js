@@ -191,8 +191,8 @@
         //    (
         //         ?:(\d+)          => (seconds) (optional)
         //         (?:\.(\d{1,3}))? => (milliseconds) full stop character (.) and fractional part of second (optional)
-        //         S                => followed by the letter "S" (optional)
-        //    )?                    => (optional)
+        //         S                => followed by the letter "S"
+        //    )?
         // $/
         parseDuration: function (str) {
             var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.(\d{1,3}))?S)?$/);

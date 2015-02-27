@@ -1,0 +1,24 @@
+{
+  "name": "jquery.countdown",
+  "version": "1.2.4",
+  "description": "Unobtrusive and easily skinable countdown jQuery plugin generating a <time> tag.",
+  "main": "jquery.countdown.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kemar/jquery.countdown.git"
+  },
+  "keywords": [
+    "countdown",
+    "jquery",
+    "plugin"
+  ],
+  "author": "Kemar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kemar/jquery.countdown/issues"
+  },
+  "homepage": "https://github.com/kemar/jquery.countdown"
+}
