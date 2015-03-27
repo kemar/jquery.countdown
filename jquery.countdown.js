@@ -403,8 +403,6 @@
 
         doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
-            // Note: in old iOS, JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
-            // Therefore we have to evaluate the remaining time with a new Date() object.
             var ms = this.endDate.getTime() - new Date().getTime();
             // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
