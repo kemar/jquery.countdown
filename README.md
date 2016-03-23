@@ -121,6 +121,14 @@ $('#my-countdown').on('time.elapsed', function () {
 });
 ```
 
+`time.tick`: by default, this event fires every second(ish), the second passed parameter is the number of miliseconds left. Useful if you're doing something like a bar that fills up as time runs out.
+
+```javascript
+$('#my-countdown').on('time.tick', function (ev, ms) {
+    // do something...
+});
+```
+
 
 ## Generated markup
 

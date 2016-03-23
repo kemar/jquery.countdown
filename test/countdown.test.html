@@ -356,17 +356,23 @@
 
             "use strict";
 
-            $("#toDateString").text(new Date("December 20, 2015 10:24:00").toDateString());
-            $("#toGMTString").text(new Date("December 20, 2015 10:24:00").toGMTString());
-            $("#toUTCString").text(new Date("December 20, 2015 10:24:00").toUTCString());
+            $("#toDateString").text(new Date("December 20, 2016 10:24:00").toDateString());
+            $("#toGMTString").text(new Date("December 20, 2016 10:24:00").toGMTString());
+            $("#toUTCString").text(new Date("December 20, 2016 10:24:00").toUTCString());
             if (Date.prototype.toISOString) {
-                $("#toISOString").text(new Date("December 20, 2015 10:24:00").toISOString());
+                $("#toISOString").text(new Date("December 20, 2016 10:24:00").toISOString());
             }
 
             $('div, time')
                 .countDown()
                 .on('time.elapsed', function () {
                     console.log(this);
+                });
+
+            $('div, time')
+                .countDown()
+                .on('time.tick', function (ev, ms) {
+                    console.log(ms);
                 });
 
         });
