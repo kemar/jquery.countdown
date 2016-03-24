@@ -363,18 +363,7 @@
                 $("#toISOString").text(new Date("December 20, 2016 10:24:00").toISOString());
             }
 
-            $('div, time')
-                .countDown()
-                .on('time.elapsed', function (ev) {
-                    console.log('time.elapsed');
-                    console.log(ev);
-                    console.log(this);
-                })
-                .on('time.tick', function (ev, ms) {
-                    console.log('time.tick');
-                    console.log(ev);
-                    console.log(ms);
-                });
+            $('div, time').countDown();
 
         });
         </script>

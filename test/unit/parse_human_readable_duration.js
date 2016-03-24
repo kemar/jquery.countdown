@@ -4,7 +4,7 @@ QUnit.test("parseHumanReadableDuration()", function (assert) {
 
     var c, duration, expected;
 
-    c = $('#countdown').countDown();
+    c = $('<div>00:00:01</div>').countDown();
 
     // 600 days, 3:59:12
     duration = c.countDown('parseHumanReadableDuration', '600 days, 3:59:12');

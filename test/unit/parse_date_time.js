@@ -2,7 +2,7 @@ QUnit.test("parseDateTime()", function (assert) {
 
     var c, duration, expected;
 
-    c = $('#countdown').countDown();
+    c = $('<div>00:00:01</div>').countDown();
 
     // 25-12-2016 22:30 - Paris UTC+1 (during Standard Time), assuming CET - Central European Time.
     expected = new Date(2016, 12 - 1, 25, 22, 30, 39);
@@ -41,7 +41,7 @@ QUnit.test("parseDateTime() with a colon character in the time-zone offset strin
 
     var c, duration, expected;
 
-    c = $('#countdown').countDown();
+    c = $('<div>00:00:01</div>').countDown();
 
     // 10-07-2016 10:18 - Paris UTC+2 (during Daylight Saving Time), assuming CEST - Central European Summer Time.
     expected = new Date(2016, 7 - 1, 10, 10, 18, 59);

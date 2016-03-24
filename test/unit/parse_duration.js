@@ -2,7 +2,7 @@ QUnit.test("parseDuration()", function (assert) {
 
     var c, duration, expected;
 
-    c = $('#countdown').countDown();
+    c = $('<div>00:00:01</div>').countDown();
 
     // Now + 3 days + 2 hours + 45 min + 20s + 544ms
     duration = c.countDown('parseDuration', 'P3DT2H45M20.544S');
