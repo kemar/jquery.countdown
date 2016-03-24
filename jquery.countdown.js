@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2.4
+ * jQuery Countdown - v1.2.5
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */
@@ -144,6 +144,7 @@
             this.setTimeoutDelay = this.sToMs(1);
             this.daysVisible = true;
             this.timeElement.bind('time.elapsed', this.options.onTimeElapsed);
+            this.timeElement.bind('time.tick', this.options.onTick);
             this.doCountDown();
         },
 
@@ -190,9 +191,9 @@
         //    (?:(\d+)M)?           => (minutes) followed by the letter "M" (optional)
         //    (
         //         ?:(\d+)          => (seconds) (optional)
-        //         (?:\.(\d{1,3}))  => (milliseconds) (optional)
-        //         ?S               => followed by the letter "S" (optional)
-        //    )?                    => (optional)
+        //         (?:\.(\d{1,3}))? => (milliseconds) full stop character (.) and fractional part of second (optional)
+        //         S                => followed by the letter "S"
+        //    )?
         // $/
         parseDuration: function (str) {
             var timeArray = str.match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:\.(\d{1,3}))?S)?$/);
@@ -403,8 +404,6 @@
 
         doCountDown: function () {
             // Calculate the difference between the two dates in milliseconds.
-            // Note: in old iOS, JavaScript is paused during elastic scroll and not resumed until the scrolling stops.
-            // Therefore we have to evaluate the remaining time with a new Date() object.
             var ms = this.endDate.getTime() - new Date().getTime();
             // Extract seconds, minutes, hours and days from the timedelta expressed in milliseconds.
             var ss = this.msToS(ms);
@@ -432,6 +431,7 @@
             // Reload it.
             var self = this;
             window.setTimeout(function () { self.doCountDown(); }, self.setTimeoutDelay);
+            return this.timeElement.trigger('time.tick', ms);
         },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
@@ -450,10 +450,10 @@
                 attr.push(remaining.ss, 'S');
             }
             this.timeElement.attr('datetime', attr.join(''));
-            // Hide days if necessary.
+            // Remove days if necessary.
             if (this.daysVisible && !this.options.always_show_days && remaining.dd === '0') {
-                this.item_dd.hide();
-                this.separator_dd.hide();
+                this.item_dd.remove();
+                this.separator_dd.remove();
                 this.daysVisible = false;
             }
             // Update countdown values.
