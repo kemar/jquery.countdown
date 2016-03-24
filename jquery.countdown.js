@@ -144,6 +144,7 @@
             this.setTimeoutDelay = this.sToMs(1);
             this.daysVisible = true;
             this.timeElement.bind('time.elapsed', this.options.onTimeElapsed);
+            this.timeElement.bind('time.tick', this.options.onTick);
             this.doCountDown();
         },
 
@@ -430,6 +431,7 @@
             // Reload it.
             var self = this;
             window.setTimeout(function () { self.doCountDown(); }, self.setTimeoutDelay);
+            return this.timeElement.trigger('time.tick', ms);
         },
 
         // @param remaining: an object literal containing a string representation of days, hours, minutes and
