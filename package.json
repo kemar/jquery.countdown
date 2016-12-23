@@ -1,6 +1,6 @@
 {
   "name": "jquery.countdown",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Unobtrusive and easily skinable countdown jQuery plugin generating a <time> tag.",
   "main": "jquery.countdown.js",
   "directories": {
