@@ -1,6 +1,8 @@
 # [jQuery Countdown](https://github.com/kemar/jquery.countdown)
 
-Unobtrusive and easily skinable [countdown jQuery plugin](http://kemar.github.io/jquery.countdown/) generating a `<time>` tag.
+Unobtrusive and easily skinable countdown jQuery plugin generating a `<time>` tag.
+
+[Live demo](https://kemar.github.io/jquery.countdown/).
 
 
 ## Supported browsers
@@ -10,7 +12,7 @@ To use the countdown jQuery plugin you need an [up-to-date web browser supportin
 
 ## Installation
 
-Get the plugin from `npm`:
+Get the plugin [from `npm`](https://www.npmjs.com/package/jquery.countdown):
 
 ```sh
 $ npm install jquery.countdown
@@ -103,6 +105,9 @@ $('div, h1, time').countDown();
 - `with_labels`: display or hide labels (default: `true`).
 - `with_seconds`: display or hide seconds (default: `true`).
 - `with_separators`: display or hide separators between days, hours, minutes and seconds (default: `true`).
+- `with_hh_leading_zero`: always display hours in 2 digit format with a leading zero when appropriate (default: `true`).
+- `with_mm_leading_zero`: always display minutes in 2 digit format with a leading zero when appropriate (default: `true`).
+- `with_ss_leading_zero`: always display seconds in 2 digit format with a leading zero when appropriate (default: `true`).
 - `label_dd`: label's text for days (default: `days`).
 - `label_hh`: label's text for hours (default: `hours`).
 - `label_mm`: label's text for minutes (default: `minutes`).

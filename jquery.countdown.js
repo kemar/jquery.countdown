@@ -98,17 +98,20 @@
     var pluginName = 'countDown';
 
     var defaults = {
-        css_class:        'countdown',
+        css_class: 'countdown',
         always_show_days: false,
-        with_labels:      true,
-        with_seconds:     true,
-        with_separators:  true,
-        label_dd:         'days',
-        label_hh:         'hours',
-        label_mm:         'minutes',
-        label_ss:         'seconds',
-        separator:        ':',
-        separator_days:   ','
+        with_labels: true,
+        with_seconds: true,
+        with_separators: true,
+        with_hh_leading_zero: true,
+        with_mm_leading_zero: true,
+        with_ss_leading_zero: true,
+        label_dd: 'days',
+        label_hh: 'hours',
+        label_mm: 'minutes',
+        label_ss: 'seconds',
+        separator: ':',
+        separator_days: ','
     };
 
     function CountDown(element, options) {
@@ -416,9 +419,15 @@
             }
             // Update display.
             this.displayRemainingTime({
-                'ss': ss < 10 ? '0' + ss.toString() : ss.toString(),
-                'mm': mm < 10 ? '0' + mm.toString() : mm.toString(),
-                'hh': hh < 10 ? '0' + hh.toString() : hh.toString(),
+                'ss': this.options.with_ss_leading_zero ?
+                        (ss < 10 ? '0' + ss.toString() : ss.toString()) :
+                        ss.toString(),
+                'mm': this.options.with_mm_leading_zero ?
+                        (mm < 10 ? '0' + mm.toString() : mm.toString()) :
+                        mm.toString(),
+                'hh': this.options.with_hh_leading_zero ?
+                        (hh < 10 ? '0' + hh.toString() : hh.toString()) :
+                        hh.toString(),
                 'dd': dd.toString()
             });
             // If seconds are hidden, stop the counter as soon as there is no minute left.
@@ -459,11 +468,11 @@
             // Update countdown values.
             this.remaining_dd.text(remaining.dd);
             this.remaining_hh1.text(remaining.hh[0]);
-            this.remaining_hh2.text(remaining.hh[1]);
+            this.remaining_hh2.text(remaining.hh[1] || '');
             this.remaining_mm1.text(remaining.mm[0]);
-            this.remaining_mm2.text(remaining.mm[1]);
+            this.remaining_mm2.text(remaining.mm[1] || '');
             this.remaining_ss1.text(remaining.ss[0]);
-            this.remaining_ss2.text(remaining.ss[1]);
+            this.remaining_ss2.text(remaining.ss[1] || '');
         }
 
     });

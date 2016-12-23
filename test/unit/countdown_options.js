@@ -82,3 +82,40 @@ QUnit.test("Option separators", function (assert) {
     assert.equal(c.find('.separator').eq(2).text(), '-', "Correct separator for hours");
 
 });
+
+QUnit.test("Option with_hh_leading_zero", function (assert) {
+
+    var c = $('<div>09:30:00</div>').countDown({with_hh_leading_zero: true});
+    assert.equal(c.find('.hh-1').text(), '0', "Leading 0 for hours");
+    assert.equal(c.find('.hh-2').text(), '9', "Correct value for hours");
+
+    var c = $('<div>09:30:00</div>').countDown({with_hh_leading_zero: false});
+    assert.equal(c.find('.hh-1').text(), '9', "Correct value for hours");
+    assert.equal(c.find('.hh-2').text(), '', "No leading 0 for hours");
+
+});
+
+QUnit.test("Option with_mm_leading_zero", function (assert) {
+
+    var c = $('<div>00:05:30</div>').countDown({with_mm_leading_zero: true});
+    assert.equal(c.find('.mm-1').text(), '0', "Leading 0 for hours");
+    assert.equal(c.find('.mm-2').text(), '5', "Correct value for hours");
+
+    var c = $('<div>00:05:30</div>').countDown({with_mm_leading_zero: false});
+    assert.equal(c.find('.mm-1').text(), '5', "Correct value for minutes");
+    assert.equal(c.find('.mm-2').text(), '', "No leading 0 for minutes");
+
+});
+
+QUnit.test("Option with_ss_leading_zero", function (assert) {
+
+    // Don't test the second's value itself because the test suite is sometimes
+    // too slow and will fail expecting 8 seconds but displaying 7.
+
+    var c = $('<div>00:00:08</div>').countDown({with_ss_leading_zero: true});
+    assert.equal(c.find('.ss-1').text(), '0', "Leading 0 for seconds");
+
+    var c = $('<div>00:00:08</div>').countDown({with_ss_leading_zero: false});
+    assert.equal(c.find('.ss-2').text(), '', "No leading 0 for seconds");
+
+});
