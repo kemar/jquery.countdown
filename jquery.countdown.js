@@ -93,7 +93,7 @@
      *              <span class="label label-ss">seconds</span>
      *          </span>
      *      </time>
-    */
+     */
 
     var pluginName = 'countDown';
 
@@ -418,16 +418,11 @@
                 ss = mm = hh = dd = 0;
             }
             // Update display.
+            // Use a space instead of 0 when no leading zero is required.
             this.displayRemainingTime({
-                'ss': this.options.with_ss_leading_zero ?
-                        (ss < 10 ? '0' + ss.toString() : ss.toString()) :
-                        ss.toString(),
-                'mm': this.options.with_mm_leading_zero ?
-                        (mm < 10 ? '0' + mm.toString() : mm.toString()) :
-                        mm.toString(),
-                'hh': this.options.with_hh_leading_zero ?
-                        (hh < 10 ? '0' + hh.toString() : hh.toString()) :
-                        hh.toString(),
+                'ss': ss < 10 ? (this.options.with_ss_leading_zero ? '0' : ' ') + ss.toString() : ss.toString(),
+                'mm': mm < 10 ? (this.options.with_mm_leading_zero ? '0' : ' ') + mm.toString() : mm.toString(),
+                'hh': hh < 10 ? (this.options.with_hh_leading_zero ? '0' : ' ') + hh.toString() : hh.toString(),
                 'dd': dd.toString()
             });
             // If seconds are hidden, stop the counter as soon as there is no minute left.
@@ -443,12 +438,20 @@
             return this.timeElement.trigger('time.tick', ms);
         },
 
-        // @param remaining: an object literal containing a string representation of days, hours, minutes and
-        // seconds remaining. e.g. { dd: "600", hh: "03", mm: "59", ss: "11" }
+        /**
+         * Display the remaining time.
+         *
+         * @param {Object} remaining - an object literal containing a string representation
+         * of days, hours, minutes and seconds remaining.
+         * E.g. with leading zeros:
+         * { dd: "600", hh: "03", mm: "59", ss: "11" }
+         * Or without leading zeros:
+         * { dd: "600", hh: " 3", mm: " 9", ss: "11" }
+         */
         displayRemainingTime: function (remaining) {
             // Format the datetime attribute of the <time> element to an ISO 8601 duration.
             // https://html.spec.whatwg.org/multipage/semantics.html#datetime-value
-            // i.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
+            // I.e.: <time datetime="P2DT00H00M30S">2 00:00:00</time>
             var attr = [];
             attr.push('P');
             if (remaining.dd !== '0') {
@@ -466,13 +469,14 @@
                 this.daysVisible = false;
             }
             // Update countdown values.
+            // Use `trim` to convert spaces to empty string when there are no leading zeros.
             this.remaining_dd.text(remaining.dd);
-            this.remaining_hh1.text(remaining.hh[0]);
-            this.remaining_hh2.text(remaining.hh[1] || '');
-            this.remaining_mm1.text(remaining.mm[0]);
-            this.remaining_mm2.text(remaining.mm[1] || '');
-            this.remaining_ss1.text(remaining.ss[0]);
-            this.remaining_ss2.text(remaining.ss[1] || '');
+            this.remaining_hh1.text(remaining.hh[0].trim());
+            this.remaining_hh2.text(remaining.hh[1]);
+            this.remaining_mm1.text(remaining.mm[0].trim());
+            this.remaining_mm2.text(remaining.mm[1]);
+            this.remaining_ss1.text(remaining.ss[0].trim());
+            this.remaining_ss2.text(remaining.ss[1]);
         }
 
     });
