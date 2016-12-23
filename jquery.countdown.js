@@ -1,5 +1,5 @@
 /*
- * jQuery Countdown - v1.2.5
+ * jQuery Countdown - v1.2.6
  * http://github.com/kemar/jquery.countdown
  * Licensed MIT
  */

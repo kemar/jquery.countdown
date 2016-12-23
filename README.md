@@ -19,8 +19,8 @@ $ npm install jquery.countdown
 Or include this script after jQuery.
 
 ```html
-<script src='jquery.js'></script>
-<script src='jquery.countdown.js'></script>
+<script src="jquery.js"></script>
+<script src="jquery.countdown.js"></script>
 ```
 
 
