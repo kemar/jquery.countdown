@@ -143,8 +143,8 @@
             this.markup();
             this.setTimeoutDelay = this.sToMs(1);
             this.daysVisible = true;
-            this.timeElement.bind('time.elapsed', this.options.onTimeElapsed);
-            this.timeElement.bind('time.tick', this.options.onTick);
+            this.timeElement.on('time.elapsed', this.options.onTimeElapsed);
+            this.timeElement.on('time.tick', this.options.onTick);
             this.doCountDown();
         },
 
